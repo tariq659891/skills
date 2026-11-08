@@ -1,0 +1,10 @@
+.DS_Store
+# what a render leaves next to a film
+**/examples/*/picture.mp4
+**/examples/*/*.mp4
+**/examples/*/cues.json
+**/examples/*/score.wav
+**/examples/*/fx.wav
+**/examples/*/stills/
+**/examples/*/sheet.jpg
+*-film/

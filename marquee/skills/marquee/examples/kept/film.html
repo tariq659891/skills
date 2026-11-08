@@ -1,0 +1,784 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Kept: a Marquee film</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1440px;height:1080px;overflow:hidden;background:#050407}
+body{font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:#24150e}
+.abs{position:absolute}
+#stage{position:absolute;inset:0;overflow:hidden;background:linear-gradient(180deg,#050407 0%,#0a0605 19%,#3d1305 44%,#ff5a1c 62%,#ffa070 75%,#ffd5be 88%,#ffece2 100%)}
+#sideglow{position:absolute;left:0;right:0;top:300px;height:600px;background:radial-gradient(60% 55% at 50% 70%,rgba(255,110,40,.55),transparent 70%)}
+#card{position:absolute;left:100px;top:110px;width:1240px;height:700px;border-radius:44px;overflow:hidden;background:#fff;box-shadow:0 30px 90px rgba(90,25,0,.45),0 0 0 1.5px rgba(255,255,255,.55);isolation:isolate}
+#edge{position:absolute;top:106px;width:420px;height:6px;border-radius:6px;background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,200,170,.4) 60%,transparent);filter:blur(1.5px)}
+#under{position:absolute;top:800px;width:300px;height:24px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,90,30,.95),rgba(255,90,30,0));filter:blur(4px)}
+.pill{position:absolute;top:866px;width:290px;height:82px;border-radius:14px;background:#fff;color:#130d0a;font-size:27px;font-weight:500;letter-spacing:-.01em;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:0 6px 18px rgba(120,40,0,.12)}
+.pill .ph{position:absolute;top:0;bottom:0;width:3px;margin-left:-1.5px;background:linear-gradient(180deg,#ffd2b8,#ff5a1c);box-shadow:0 0 10px 2px rgba(255,100,40,.85),0 0 30px 6px rgba(255,90,30,.45)}
+.pill .ph::before{content:"";position:absolute;top:0;left:-6px;width:15px;height:12px;background:#ffb08a;clip-path:polygon(0 0,100% 0,50% 100%)}
+.pill span{position:relative;z-index:2}
+#ticks{position:absolute;top:992px;left:110px;width:1220px;height:20px}
+#ticks i{position:absolute;top:0;width:2px;height:18px;border-radius:2px;background:rgba(90,30,5,.32)}
+#dim{position:absolute;inset:0;background:#050407;opacity:0;pointer-events:none}
+
+/* inside the card */
+.sc{position:absolute;inset:0;display:none}
+.fill{position:absolute;inset:0}
+.mesh{position:absolute;inset:-12%;background:
+ radial-gradient(38% 48% at var(--x1,18%) var(--y1,28%),#ffd3bf 0%,rgba(255,211,191,0) 100%),
+ radial-gradient(44% 52% at var(--x2,82%) var(--y2,22%),#ffb48f 0%,rgba(255,180,143,0) 100%),
+ radial-gradient(48% 50% at var(--x3,66%) var(--y3,86%),#ff9466 0%,rgba(255,148,102,0) 100%),
+ radial-gradient(40% 42% at var(--x4,14%) var(--y4,84%),#efdcff 0%,rgba(239,220,255,0) 100%),
+ #fff3ec}
+#paper{background:#fff}
+.mist{position:absolute;left:-60px;right:-60px;bottom:-40px;height:330px;filter:blur(16px)}
+.mist i{position:absolute;bottom:0;border-radius:50%}
+.mistfade{position:absolute;left:0;right:0;bottom:0;height:300px;background:linear-gradient(0deg,rgba(255,160,115,.42),rgba(255,190,160,.12) 55%,rgba(255,255,255,0))}
+.line{position:absolute;left:0;right:0;text-align:center;font-size:56px;font-weight:500;letter-spacing:-.028em;white-space:nowrap;line-height:1.15}
+.w,.ch{display:inline-block;white-space:pre}
+.acc{color:#ff5a1c}
+.soft{color:#8a6f62}
+.caret{position:absolute;width:3px;height:60px;background:#ff5a1c;border-radius:2px}
+.ico{position:absolute;width:40px;height:40px;color:#3a2016}
+.ico svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* phone */
+.phone{position:absolute;width:350px;height:730px;border-radius:60px;background:linear-gradient(145deg,#2b2623,#0d0b0a 40%,#1d1916);padding:11px;box-shadow:0 50px 90px rgba(70,20,0,.38),0 10px 24px rgba(70,20,0,.25),inset 0 0 0 1.5px #4a413c}
+.scr{position:absolute;inset:11px;border-radius:49px;overflow:hidden;background:#fff}
+.island{position:absolute;top:13px;left:50%;width:106px;height:31px;margin-left:-53px;background:#000;border-radius:20px;z-index:20}
+.status{position:absolute;top:16px;left:30px;right:26px;height:20px;display:flex;justify-content:space-between;font-size:15px;font-weight:600;z-index:19}
+.status b{display:flex;gap:5px;align-items:center}
+.status b i{display:block;background:currentColor;border-radius:1.5px}
+.lock{position:absolute;inset:0;background:radial-gradient(120% 80% at 30% 18%,#ffa46e 0%,#ff5a1c 34%,#8a240a 70%,#2a0b06 100%);color:#fff}
+.lock .date{position:absolute;top:88px;left:0;right:0;text-align:center;font-size:18px;font-weight:600;opacity:.88}
+.lock .time{position:absolute;top:104px;left:0;right:0;text-align:center;font-size:100px;font-weight:700;letter-spacing:-.03em;opacity:.95}
+.notif{position:absolute;left:12px;right:12px;top:262px;border-radius:24px;background:rgba(255,248,244,.9);color:#24150e;padding:13px 14px 14px;display:flex;gap:11px;box-shadow:0 10px 30px rgba(40,10,0,.25)}
+.notif .ai{width:40px;height:40px;flex:none;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center}
+.notif .t1{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.notif .t1 span{color:#8b7468;font-weight:500}
+.notif .t2{font-size:15px;font-weight:600;margin-top:2px}
+.notif .t3{font-size:14px;color:#5b463c;margin-top:1px;line-height:1.3}
+.touch{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 6px 20px rgba(0,0,0,.25);z-index:30}
+.ring{position:absolute;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;border:2px solid #fff;z-index:30}
+
+/* receipts */
+.rcw{filter:drop-shadow(0 14px 18px rgba(70,28,6,.22))}
+.rc{background:#fffdf7;padding:16px 14px 24px;font:10.5px/1.45 "SF Mono",Menlo,monospace;color:#3b2f28;text-transform:uppercase;position:relative;
+ -webkit-mask:linear-gradient(#000 0 0) top/100% calc(100% - 7px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/12px 7px repeat-x}
+.rc .rs{font-weight:700;font-size:13px;text-align:center;letter-spacing:.06em}
+.rc .rsub{text-align:center;opacity:.65;font-size:9.5px;margin-bottom:4px}
+.rc .rl{border-top:1px dashed rgba(60,45,35,.45);margin:6px 0}
+.rc .ri{display:flex;justify-content:space-between;gap:8px}
+.rc .rt{font-weight:700;font-size:12px}
+.rc .rd{text-align:center;opacity:.6;font-size:9.5px;margin-top:6px}
+.rc .bc{height:24px;margin:8px 6px 0;background:repeating-linear-gradient(90deg,#2b211b 0 2px,transparent 2px 3px,#2b211b 3px 4px,transparent 4px 7px,#2b211b 7px 10px,transparent 10px 11px)}
+.rc.faded{color:rgba(59,47,40,.4)}
+.rc.faded .bc{opacity:.35}
+.rc.crum::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 38%,rgba(60,30,10,.08) 40%,transparent 46%),linear-gradient(62deg,transparent 52%,rgba(60,30,10,.07) 54%,transparent 61%),linear-gradient(160deg,transparent 70%,rgba(60,30,10,.06) 72%,transparent 78%),linear-gradient(170deg,rgba(255,255,255,.6),transparent 35%)}
+
+/* tiles in the ring */
+.tile{position:absolute;border-radius:16px;background:#fff;box-shadow:0 16px 34px rgba(80,30,5,.18),0 0 0 1px rgba(80,30,5,.05);overflow:hidden;font-size:12px}
+.mail{width:200px;padding:13px}
+.mail .mh{display:flex;gap:8px;align-items:center;font-weight:600;font-size:12px}
+.mail .av{width:24px;height:24px;border-radius:50%;background:#2e5bff;color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center}
+.mail .ms{font-weight:700;font-size:13px;margin-top:8px}
+.mail .mb{color:#7d675c;margin-top:4px;line-height:1.35}
+.sticky{width:150px;height:140px;background:#ffe57a;border-radius:4px;padding:16px 14px;font:22px/1.2 "Bradley Hand","Marker Felt",cursive;color:#5a4300;box-shadow:0 18px 30px rgba(80,50,0,.2)}
+.bub{padding:10px 14px;border-radius:18px;font-size:14px;max-width:190px;line-height:1.3}
+.bub.in{background:#ece6e2;color:#2a1c15}
+.bub.me{background:#2f7bff;color:#fff;margin-left:auto}
+.box{width:190px;height:130px;border-radius:8px;background:linear-gradient(180deg,#c99868,#a9774a);display:flex;align-items:center;justify-content:center}
+.box b{background:#fff8ea;padding:7px 12px;font:20px "Marker Felt","Bradley Hand",cursive;color:#3b2a1b;transform:rotate(-4deg);border-radius:3px}
+
+/* app ui */
+.ui{font-size:14px;color:#24150e}
+.row{position:absolute;left:18px;right:18px;height:62px;border-radius:16px;background:#faf5f2;display:flex;align-items:center;padding:0 12px;gap:11px}
+.row .ic{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex:none}
+.row .ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.row .lb{font-size:11.5px;color:#8b7468;font-weight:500}
+.row .vl{font-size:15.5px;font-weight:650;margin-top:1px}
+.chip{margin-left:auto;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:650;white-space:nowrap}
+.orange{background:#ffe6da;color:#e5470e}
+.green{background:#dcf4e4;color:#1d8a4b}
+.grey{background:#efe9e6;color:#6d5b52}
+.floatcard{position:absolute;background:#fff;border-radius:20px;padding:13px 16px 13px 13px;display:flex;gap:11px;align-items:center;box-shadow:0 20px 40px rgba(90,30,5,.18),0 0 0 1px rgba(90,30,5,.05);white-space:nowrap}
+.floatcard .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.floatcard .ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.floatcard .a{font-size:16px;font-weight:650}
+.floatcard .b{font-size:13px;color:#8b7468;margin-top:1px}
+.btn{position:absolute;left:18px;right:18px;height:56px;border-radius:17px;background:#ff5a1c;color:#fff;font-size:17px;font-weight:650;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(255,90,28,.35)}
+.sw{width:50px;height:30px;border-radius:16px;background:#e3dbd6;position:relative;flex:none;margin-left:auto}
+.sw i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 5px rgba(0,0,0,.2)}
+
+/* monitor */
+.mon{position:absolute;left:210px;top:44px;width:820px;height:500px;border-radius:20px;background:#0c0a09;padding:13px;box-shadow:0 40px 70px rgba(60,30,10,.3),inset 0 0 0 1.5px #3a332e}
+.mon .ms{position:absolute;inset:13px;border-radius:9px;overflow:hidden;background:#fbf8f6}
+.neck{position:absolute;left:575px;top:544px;width:90px;height:100px;background:linear-gradient(90deg,#c9c3be,#efeae6 45%,#bdb6b0)}
+.foot{position:absolute;left:480px;top:636px;width:280px;height:16px;border-radius:5px 5px 9px 9px;background:linear-gradient(180deg,#f1ece8,#bfb8b2)}
+.side{position:absolute;left:0;top:0;bottom:0;width:168px;background:#f4eeea;padding:18px 14px}
+.nav{font-size:13px;padding:8px 10px;border-radius:9px;color:#5b463c;margin-top:3px}
+.nav.on{background:#fff;color:#24150e;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.gcard{position:absolute;width:132px;height:142px;border-radius:14px;background:#fff;box-shadow:0 4px 14px rgba(80,30,5,.08),0 0 0 1px rgba(80,30,5,.05);padding:9px}
+.gcard .th{height:62px;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#7a3a17}
+.gcard .th svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.gcard .n{font-size:12px;font-weight:650;margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcard .p{font-size:11px;color:#8b7468}
+.gcard .chip{position:absolute;left:9px;bottom:9px;font-size:10px;padding:3px 7px}
+.toast{position:absolute;right:16px;top:14px;width:250px;background:#24150e;color:#fff;border-radius:13px;padding:11px 13px;font-size:12px;display:flex;gap:10px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+.cursor{position:absolute;width:26px;height:26px;z-index:40}
+
+/* calendar */
+.cal{position:absolute;left:170px;top:150px;width:410px;height:400px;border-radius:28px;background:#fff;box-shadow:0 26px 60px rgba(90,30,5,.16),0 0 0 1px rgba(90,30,5,.06);padding:26px 26px}
+.cal .hd{font-size:22px;font-weight:700;display:flex;justify-content:space-between}
+.cal .hd span{color:#8b7468;font-weight:500;font-size:16px}
+.cal .wk{display:grid;grid-template-columns:repeat(7,1fr);margin-top:18px;font-size:12px;color:#a08b80;font-weight:600;text-align:center}
+.cal .days{position:relative;display:grid;grid-template-columns:repeat(7,1fr);row-gap:8px;margin-top:10px;text-align:center;font-size:16px;font-weight:500}
+.cal .days .cell{height:42px;line-height:42px;position:relative;z-index:2}
+.band{position:absolute;height:42px;border-radius:21px;z-index:1}
+
+/* simple */
+.guide{position:absolute;background:rgba(255,90,28,.28)}
+.mark svg{width:100%;height:100%}
+.qr rect{fill:#24150e}
+</style></head>
+<body data-fixture="kept">
+<div id="stage">
+  <div id="sideglow"></div>
+  <div id="card">
+    <!-- the paper: white with a warm mist, under every scene of words -->
+    <div id="paper" class="fill"><div class="mistfade"></div><div class="mist" id="mist"></div></div>
+
+    <!-- S1 + S2: intro -->
+    <div class="sc" id="s1">
+      <div class="mesh" id="mesh1"></div>
+      <div id="s1recs"></div>
+      <div class="phone" id="p1" style="left:445px;top:70px">
+        <div class="scr">
+          <div class="lock">
+            <div class="status" style="color:#fff"><span>9:41</span><b><i style="width:3px;height:5px"></i><i style="width:3px;height:7px"></i><i style="width:3px;height:9px"></i><i style="width:3px;height:11px"></i><i style="width:22px;height:11px;border-radius:3px;margin-left:4px"></i></b></div>
+            <div class="date">Sunday, 8 November</div>
+            <div class="time">9:41</div>
+            <div class="notif" id="n1"><div class="ai mark" data-mark="30"></div><div style="flex:1"><div class="t1">Kept<span>now</span></div><div class="t2">Return window closes in 2 days</div><div class="t3">Sony WH-1000XM5 from Harbor Audio. Tap to start a return.</div></div></div>
+          </div>
+        </div>
+        <div class="island"></div>
+      </div>
+      <div class="abs" id="logo1" style="left:0;right:0;top:215px;height:260px;display:flex;justify-content:center;align-items:center;gap:26px">
+        <div class="mark abs" id="lm1" style="position:relative;width:170px;height:170px" data-mark="170"></div>
+        <div id="lw1" style="font-size:236px;font-weight:750;letter-spacing:-.055em;line-height:1;display:flex"></div>
+      </div>
+      <div class="line" id="tag1" style="top:470px;font-size:31px;font-weight:600;color:#3d1d0f;letter-spacing:-.012em"><span class="w">Receipts,</span> <span class="w">returns</span> <span class="w">and</span> <span class="w">warranties.</span> <span class="w acc">Handled.</span></div>
+    </div>
+
+    <!-- S3: Every week, something breaks. -->
+    <div class="sc" id="s3">
+      <div class="line" id="l3" style="top:300px"><span class="acc">Every week, </span><span>something breaks.</span></div>
+      <div id="s3ico"></div>
+    </div>
+
+    <!-- S4: You kept the receipt... right? -->
+    <div class="sc" id="s4">
+      <div class="line" id="l4a" style="top:285px"><span class="w">You</span> <span class="w">definitely</span> <span class="w">kept</span> <span class="w">the</span> <span class="w">receipt.</span></div>
+      <div class="line acc" id="l4b" style="top:360px"><span>…right?</span></div>
+    </div>
+
+    <!-- S5: the ring of everywhere it might be -->
+    <div class="sc" id="s5">
+      <div id="ring"></div>
+      <div class="line" id="l5" style="top:312px;font-size:46px"><span class="w">It’s</span> <span class="w">in</span> <span class="w acc">there</span> <span class="w acc">somewhere.</span></div>
+    </div>
+
+    <!-- S6: the calendar -->
+    <div class="sc" id="s6">
+      <div class="cal" id="cal">
+        <div class="hd">November<span>2026</span></div>
+        <div class="wk"><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div></div>
+        <div class="days" id="days"></div>
+      </div>
+      <div class="abs" id="l6" style="left:660px;top:250px;font-size:52px;font-weight:500;letter-spacing:-.028em;line-height:1.2">
+        <div><span class="w">The</span> <span class="w">return</span> <span class="w">window?</span></div>
+        <div class="acc"><span class="w">Closed</span> <span class="w">yesterday.</span></div>
+      </div>
+    </div>
+
+    <!-- S7: Simple. -->
+    <div class="sc" id="s7">
+      <div class="fill" style="background:#fff"></div>
+      <div class="mesh" id="mesh7"></div>
+      <div class="guide" id="g7a" style="left:0;right:0;top:268px;height:1px"></div>
+      <div class="guide" id="g7b" style="left:0;right:0;top:412px;height:1px"></div>
+      <div class="line" id="l7" style="top:250px;font-size:190px;font-weight:650;letter-spacing:-.04em;line-height:1"></div>
+      <div class="abs" id="pulse7" style="left:620px;top:350px;width:10px;height:10px"></div>
+      <div class="mark abs" id="m7" style="left:540px;top:270px;width:160px;height:160px" data-mark="160"></div>
+    </div>
+
+    <!-- S8 + S9: scan a receipt, it fills in -->
+    <div class="sc" id="s8">
+      <div class="fill" id="desk" style="filter:blur(5px);transform:scale(1.06)">
+        <div class="fill" style="background:radial-gradient(120% 95% at 50% 35%,#ead6bd 0%,#d2ad88 52%,#9c7049 100%)"></div>
+        <div class="fill" style="background:repeating-linear-gradient(96deg,rgba(90,50,20,.06) 0 2px,transparent 2px 11px),repeating-linear-gradient(94deg,rgba(255,255,255,.05) 0 1px,transparent 1px 7px)"></div>
+        <div class="abs" id="deskrc" style="left:150px;top:120px;transform:rotate(-9deg)"></div>
+        <div class="abs" style="left:930px;top:70px;width:230px;height:230px;border-radius:50%;background:radial-gradient(closest-side,#3a1d0e 0 62%,#f6efe8 63% 80%,#ddd2c8 81% 86%,rgba(0,0,0,.18) 88%,transparent 100%)"></div>
+        <div class="abs" style="left:880px;top:420px;width:300px;height:200px;border-radius:12px;background:linear-gradient(135deg,#2c3a2e,#1d271f);transform:rotate(14deg);box-shadow:0 20px 30px rgba(0,0,0,.25)"></div>
+      </div>
+      <div class="mesh" id="mesh8"></div>
+      <div class="phone" id="p8" style="left:445px;top:40px">
+        <div class="scr" style="background:#1b120d">
+          <!-- camera -->
+          <div class="fill" id="cam">
+            <div class="fill" style="background:radial-gradient(120% 90% at 50% 40%,#ead6bd 0%,#cfa883 60%,#9c7049 100%)"></div>
+            <div class="fill" style="background:repeating-linear-gradient(96deg,rgba(90,50,20,.07) 0 2px,transparent 2px 11px)"></div>
+            <div class="abs" id="camrc" style="left:44px;top:120px;transform:rotate(-2.5deg);transform-origin:50% 50%"></div>
+            <div class="fill" id="vign" style="background:rgba(20,10,5,.35)"></div>
+            <div class="abs" id="hint" style="left:0;right:0;top:64px;text-align:center"><span id="hintt" style="display:inline-block;background:rgba(20,10,5,.6);color:#fff;font-size:14px;font-weight:600;padding:8px 14px;border-radius:20px">Point at a receipt</span></div>
+            <div id="brk"></div>
+            <div class="abs" id="scanl" style="left:36px;width:256px;height:3px;background:#ff8a4c;box-shadow:0 0 14px 4px rgba(255,120,60,.8)"></div>
+            <div id="hl"></div>
+            <div class="abs" id="got" style="left:0;right:0;top:600px;text-align:center"><span style="display:inline-flex;gap:8px;align-items:center;background:#fff;color:#24150e;font-size:16px;font-weight:650;padding:11px 18px;border-radius:24px;box-shadow:0 8px 20px rgba(0,0,0,.25)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1d8a4b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Got it</span></div>
+            <div class="fill" id="flash" style="background:#fff"></div>
+          </div>
+          <!-- the item -->
+          <div class="fill ui" id="item" style="background:#fff">
+            <div class="status"><span>9:41</span><b><i style="width:3px;height:5px"></i><i style="width:3px;height:7px"></i><i style="width:3px;height:9px"></i><i style="width:3px;height:11px"></i><i style="width:22px;height:11px;border-radius:3px;margin-left:4px"></i></b></div>
+            <div class="abs" style="left:20px;right:20px;top:60px;display:flex;justify-content:space-between;font-size:15px;color:#ff5a1c;font-weight:600"><span>‹ All items</span><span style="color:#8b7468">•••</span></div>
+            <div class="abs" id="ptile" style="left:18px;right:18px;top:96px;height:168px;border-radius:22px;background:radial-gradient(90% 90% at 30% 20%,#fff0e8,#ffd6c2);display:flex;align-items:center;justify-content:center;color:#8a3b14"><div style="width:104px;height:104px" data-ico="headphones" data-sw="1.25"></div></div>
+            <div class="abs" id="pname" style="left:20px;top:280px;font-size:23px;font-weight:750;letter-spacing:-.02em">Sony WH-1000XM5</div>
+            <div class="abs" id="psub" style="left:20px;top:312px;font-size:14px;color:#8b7468">Harbor Audio · 31 Oct 2026 · $349.00</div>
+            <div class="row" id="r1" style="top:348px"><div class="ic orange" data-ico="box"></div><div><div class="lb">Return by</div><div class="vl">Fri 14 Nov</div></div><div class="chip orange">6 days left</div></div>
+            <div class="row" id="r2" style="top:418px"><div class="ic green" data-ico="shield"></div><div><div class="lb">Warranty</div><div class="vl">Until 31 Oct 2028</div></div><div class="chip green">2 years</div></div>
+            <div class="row" id="r3" style="top:488px"><div class="ic grey" data-ico="receipt"></div><div><div class="lb">Receipt</div><div class="vl">Saved from camera</div></div><div class="chip grey">PDF</div></div>
+            <div class="row" id="r4" style="top:562px;background:#fff;box-shadow:0 0 0 1px #efe6e1"><div class="ic orange" data-ico="bell"></div><div class="vl" style="font-size:14.5px">Remind me 2 days before</div><div class="sw" id="sw8"><i></i></div></div>
+          </div>
+        </div>
+        <div class="island"></div>
+      </div>
+      <div class="touch" id="t8"></div><div class="ring" id="rg8"></div>
+      <div class="floatcard" id="f1" style="left:96px;top:120px"><div class="ic orange" data-ico="box"></div><div><div class="a">Return window found</div><div class="b">Closes Fri 14 Nov</div></div></div>
+      <div class="floatcard" id="f2" style="left:840px;top:150px"><div class="ic green" data-ico="shield"></div><div><div class="a">2-year warranty</div><div class="b">Covered until Oct 2028</div></div></div>
+      <div class="floatcard" id="f3" style="left:130px;top:430px"><div class="ic grey" data-ico="receipt"></div><div><div class="a">Receipt saved</div><div class="b">Even when the ink fades</div></div></div>
+      <div class="floatcard" id="f4" style="left:860px;top:450px"><div class="ic orange" data-ico="bell"></div><div><div class="a">We’ll remind you</div><div class="b">2 days before it closes</div></div></div>
+    </div>
+
+    <!-- S10: Whatever you buy... -->
+    <div class="sc" id="s10">
+      <div class="line" id="l10a" style="top:248px;text-align:left;left:250px"><span class="w">Whatever</span> <span class="w">you</span> <span class="w">buy,</span></div>
+      <div class="line soft" id="l10b" style="top:330px;text-align:left;left:520px"><span class="w">online</span> <span class="w">or</span> <span class="w">in</span> <span class="w">store,</span></div>
+      <div class="line" id="l10c" style="top:300px"><span class="w">Kept</span> <span class="w acc">remembers.</span></div>
+      <div id="s10ico"></div>
+    </div>
+
+    <!-- S11: the monitor -->
+    <div class="sc" id="s11">
+      <div class="fill" style="background:linear-gradient(180deg,#f4ede7 0%,#e9dfd7 66%,#dccfc5 66.2%,#e7ddd4 100%)"></div>
+      <div class="fill" id="room" style="transform-origin:620px 330px">
+        <div class="abs" style="left:380px;top:628px;width:480px;height:44px;border-radius:50%;background:radial-gradient(closest-side,rgba(60,30,10,.28),transparent);"></div>
+        <div class="neck"></div><div class="foot"></div>
+        <div class="mon"><div class="ms ui" id="web">
+          <div class="side">
+            <div style="display:flex;align-items:center;gap:8px;font-weight:750;font-size:17px;letter-spacing:-.02em;margin-bottom:16px"><div class="mark" data-mark="24" style="width:24px;height:24px"></div>Kept</div>
+            <div class="nav on">All items</div><div class="nav">Returns <span style="float:right;color:#ff5a1c;font-weight:650">3</span></div><div class="nav">Warranties</div><div class="nav">Receipts inbox</div><div class="nav">Shared with Sam</div>
+          </div>
+          <div class="abs" style="left:192px;top:20px;font-size:21px;font-weight:750;letter-spacing:-.02em">Everything you’ve kept</div>
+          <div class="abs" style="left:192px;top:50px;font-size:12.5px;color:#8b7468">From your camera, your inbox and your Apple Wallet</div>
+          <div class="abs" style="right:18px;top:16px;width:190px;height:62px;border-radius:13px;background:#24150e;color:#fff;padding:10px 14px"><div style="font-size:11px;opacity:.7">Under warranty</div><div id="count" style="font-size:24px;font-weight:750;letter-spacing:-.02em">$0</div></div>
+          <div id="grid"></div>
+          <div class="toast" id="toast"><div class="mark" data-mark="26" style="width:26px;height:26px;flex:none"></div><div><div style="font-weight:650">New receipt from your inbox</div><div style="opacity:.7;margin-top:1px">Ember Mug 2 · warranty until 2027</div></div></div>
+        </div></div>
+      </div>
+      <svg class="cursor" id="cur" viewBox="0 0 24 24"><path d="M4 2l15 9-6.5 1.5L9 19z" fill="#111" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    </div>
+
+    <!-- S12: the reminder, and one tap to return -->
+    <div class="sc" id="s12">
+      <div class="mesh" id="mesh12"></div>
+      <div class="phone" id="p12" style="left:445px;top:40px">
+        <div class="scr">
+          <div class="lock" id="lock12">
+            <div class="status" style="color:#fff"><span>9:41</span><b><i style="width:3px;height:5px"></i><i style="width:3px;height:7px"></i><i style="width:3px;height:9px"></i><i style="width:3px;height:11px"></i><i style="width:22px;height:11px;border-radius:3px;margin-left:4px"></i></b></div>
+            <div class="date">Wednesday, 12 November</div>
+            <div class="time">8:05</div>
+            <div class="notif" id="n12"><div class="ai mark" data-mark="30"></div><div style="flex:1"><div class="t1">Kept<span>now</span></div><div class="t2">Return window closes in 2 days</div><div class="t3">Sony WH-1000XM5 from Harbor Audio. Tap to start a return.</div></div></div>
+          </div>
+          <div class="fill ui" id="ret" style="background:#fff">
+            <div class="status"><span>8:05</span><b><i style="width:3px;height:5px"></i><i style="width:3px;height:7px"></i><i style="width:3px;height:9px"></i><i style="width:3px;height:11px"></i><i style="width:22px;height:11px;border-radius:3px;margin-left:4px"></i></b></div>
+            <div class="abs" style="left:20px;top:62px;font-size:15px;color:#ff5a1c;font-weight:600">‹ Back</div>
+            <div class="abs" style="left:20px;top:94px;font-size:28px;font-weight:750;letter-spacing:-.025em">Start a return</div>
+            <div class="abs" style="left:18px;right:18px;top:146px;display:flex;gap:12px;align-items:center"><div style="width:58px;height:58px;border-radius:15px;background:#ffe3d4;display:flex;align-items:center;justify-content:center;color:#8a3b14"><div style="width:34px;height:34px" data-ico="headphones"></div></div><div><div style="font-weight:650;font-size:16px">Sony WH-1000XM5</div><div style="color:#8b7468;font-size:13px;margin-top:2px">Harbor Audio · $349.00</div></div></div>
+            <div class="row" style="top:222px;height:70px"><div class="ic orange" data-ico="calendar"></div><div><div class="lb">Harbor Audio takes returns until</div><div class="vl">Fri 14 Nov · 2 days left</div></div></div>
+            <div class="row" style="top:302px"><div class="ic grey" data-ico="card"></div><div><div class="lb">Refund to</div><div class="vl">Visa ·· 4821</div></div></div>
+            <div class="btn" id="btn12" style="top:384px"><span id="btnt">Create return label</span><span id="spin" class="abs" style="width:24px;height:24px;border-radius:50%;border:3px solid rgba(255,255,255,.35);border-top-color:#fff"></span><svg id="bchk" class="abs" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+            <div class="abs" id="label12" style="left:18px;right:18px;top:458px;height:150px;border-radius:20px;background:#fff;box-shadow:0 0 0 1px #efe6e1,0 10px 24px rgba(80,30,5,.08);display:flex;gap:14px;align-items:center;padding:14px"><svg class="qr" id="qr" width="118" height="118" viewBox="0 0 25 25"></svg><div><div style="font-weight:700;font-size:16px;line-height:1.25">Label ready</div><div style="color:#8b7468;font-size:13px;margin-top:5px;line-height:1.35">Drop it at any post office. Refund in 3–5 days.</div></div></div>
+          </div>
+        </div>
+        <div class="island"></div>
+      </div>
+      <div class="touch" id="t12"></div><div class="ring" id="rg12"></div>
+      <div class="floatcard" id="f12" style="left:850px;top:430px"><div class="ic green" data-ico="check"></div><div><div class="a">$349 on its way back</div><div class="b">Two days to spare</div></div></div>
+      <div class="floatcard" id="f12b" style="left:110px;top:170px"><div class="ic orange" data-ico="bell"></div><div><div class="a">Reminded in time</div><div class="b">Before the window closed</div></div></div>
+    </div>
+
+    <!-- S13: Buy it. / Keep it. -->
+    <div class="sc" id="s13">
+      <div class="line" id="l13a" style="top:300px;font-size:64px"><span>Buy it.</span></div>
+      <div class="line acc" id="l13b" style="top:300px;font-size:64px"><span>Keep it.</span></div>
+    </div>
+
+    <!-- S14: the end -->
+    <div class="sc" id="s14">
+      <div class="fill" style="background:linear-gradient(180deg,#ffcfb5 0%,#ffae86 48%,#ff8752 100%)"></div>
+      <div class="fill" id="sky"></div>
+      <div class="abs" id="ring14" style="left:620px;top:330px"></div>
+      <div class="abs" id="logo14" style="left:0;right:0;top:250px;height:150px;display:flex;justify-content:center;align-items:center">
+        <div class="mark" id="lm14" style="width:132px;height:132px;flex:none" data-mark="132" data-white="1"></div>
+        <div id="lwrap14" style="overflow:hidden;height:170px;display:flex;align-items:center"><div id="lw14" style="font-size:150px;font-weight:750;letter-spacing:-.055em;color:#fff;line-height:1;padding-left:22px;text-shadow:0 10px 40px rgba(150,40,0,.25)">Kept</div></div>
+      </div>
+      <div class="line" id="tag14" style="top:432px;font-size:31px;color:#4a1a05;font-weight:600;letter-spacing:-.012em"><span class="w">Every receipt.</span> <span class="w">Every warranty.</span> <span class="w">Kept.</span></div>
+      <div class="abs" id="url14" style="left:0;right:0;top:500px;text-align:center"><span style="display:inline-block;background:rgba(255,255,255,.92);color:#c43d0a;font-size:20px;font-weight:650;padding:11px 22px;border-radius:30px;box-shadow:0 10px 30px rgba(150,40,0,.2)">kept.app · free on iPhone</span></div>
+    </div>
+  </div>
+
+  <div id="edge"></div>
+  <div id="under"></div>
+  <div id="pills"></div>
+  <div id="ticks"></div>
+  <div id="dim"></div>
+</div>
+
+<script>
+/* KEPT: receipts, returns and warranties. 45 s, 4:3. The first Marquee film, written by hand before the engine
+ * existed: everything is in this one file, so read it to see every scene end to end. */
+// ---------- tools ----------
+const LEN = 45;
+const C = (x, a = 0, b = 1) => x < a ? a : x > b ? b : x;
+const P = (t, a, b) => C((t - a) / (b - a));
+const L = (a, b, x) => a + (b - a) * x;
+const out3 = x => 1 - Math.pow(1 - x, 3), out5 = x => 1 - Math.pow(1 - x, 5);
+const io = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const back = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const $ = s => document.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+function S(el, o = {}) {
+  if (typeof el === 'string') el = $(el);
+  const { o: op = 1, x = 0, y = 0, s = 1, r = 0, rx = 0, ry = 0, b = 0, sx, sy } = o;
+  el.style.opacity = op;
+  el.style.visibility = op <= .002 ? 'hidden' : 'visible';
+  el.style.transform = `translate(${x}px,${y}px)${rx || ry ? ` perspective(1400px) rotateX(${rx}deg) rotateY(${ry}deg)` : ''} rotate(${r}deg) scale(${sx ?? s},${sy ?? s})`;
+  el.style.filter = b > .05 ? `blur(${b.toFixed(2)}px)` : 'none';
+}
+function on(id, t, a, b) { const el = $('#' + id); const v = t >= a && t < b; el.style.display = v ? 'block' : 'none'; return v; }
+function vis(t, a, b, fi = .3, fo = .3) { const i = fi ? P(t, a, a + fi) : (t >= a ? 1 : 0); const o = fo ? 1 - P(t, b - fo, b) : (t < b ? 1 : 0); return Math.min(i, o); }
+// a word blurs in at a, out at z
+function W(t, a, z = 1e9, d = .55, dz = .4) { const k = out3(P(t, a, a + d)), q = io(P(t, z, z + dz)); return { o: k * (1 - q), y: (1 - k) * 22 - q * 14, b: (1 - k) * 14 + q * 12 }; }
+function words(sel) { return $$(sel + ' .w'); }
+function mul(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const ICONS = {
+  headphones: '<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="7" rx="1.6"/><rect x="16.5" y="14" width="4.5" height="7" rx="1.6"/>',
+  kettle: '<path d="M6.5 10h10l-1 10h-8z"/><path d="M8.5 10V8.5a3.5 3.5 0 0 1 7 0V10"/><path d="M16.5 12.5l3-2v4l-3.3 2"/><path d="M6.5 13l-2.5-1.5"/>',
+  sneaker: '<path d="M3 16.5v-5.5l4.5-1 3 3 4-1.2 6.5 3.2v2.3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 15.5h18"/><path d="M9 11.5l1-1M11 12.5l1-1"/>',
+  phone: '<rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M10.5 7l2 3-2.2 2 3 3.5"/>',
+  lamp: '<path d="M9 3h6l3.5 8h-13z"/><path d="M12 11v8"/><path d="M8 21h8"/>',
+  watch: '<rect x="6.5" y="7" width="11" height="10" rx="3"/><path d="M9 7l1-4h4l1 4M9 17l1 4h4l1-4"/><path d="M12 10v2.2l1.6 1"/>',
+  mug: '<path d="M5 8h11v8a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.8a2.2 2.2 0 0 1 0 4.4H16"/><path d="M8.5 3.5v2M11.5 3v2.5"/>',
+  drill: '<path d="M3 7.5h11v5H3z"/><path d="M14 9h4M18 10h3"/><path d="M7.5 12.5l-1 8.5h4l1.2-8.5"/>',
+  tag: '<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/>',
+  shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/>',
+  receipt: '<path d="M6 3h12v18l-2-1.5-2 1.5-2-1.5-2 1.5-2-1.5L6 21z"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+  box: '<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
+  bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/>',
+  calendar: '<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  card: '<rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6 15h4"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/>',
+};
+const ico = (n, sw = 1.6) => `<svg viewBox="0 0 24 24" style="width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:${sw};stroke-linecap:round;stroke-linejoin:round">${ICONS[n]}</svg>`;
+const MARK = (white) => `<svg viewBox="0 0 64 64"><defs><linearGradient id="kg${white ? 'w' : ''}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${white ? '#ffffff' : '#FF9152'}"/><stop offset="1" stop-color="${white ? '#fff1e8' : '#FF4A12'}"/></linearGradient></defs><path d="M14 5h36a7 7 0 0 1 7 7v47l-7.1-4-7.1 4-7.1-4-7.1 4-7.1-4L14.4 59 7 55V12a7 7 0 0 1 7-7z" fill="url(#kg${white ? 'w' : ''})"/><path d="M20.5 31l8.5 8.5 15.5-16.5" fill="none" stroke="${white ? '#ff5a1c' : '#fff'}" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function receipt({ store, sub, items, total, date, w = 200, faded = false, crum = false }) {
+  return `<div class="rcw"><div class="rc ${faded ? 'faded' : ''} ${crum ? 'crum' : ''}" style="width:${w}px"><div class="rs">${store}</div><div class="rsub">${sub}</div><div class="rl"></div>${items.map(([n, p]) => `<div class="ri"><span>${n}</span><span>${p}</span></div>`).join('')}<div class="rl"></div><div class="ri rt"><span>Total</span><span>${total}</span></div><div class="rd">${date}</div><div class="bc"></div></div></div>`;
+}
+const HARBOR = { store: 'Harbor Audio', sub: '14 Quay St · Store 031', items: [['Sony WH-1000XM5', '349.00'], ['Carry case', 'incl.'], ['Gift wrap', '0.00']], total: '$349.00', date: '31/10/2026 14:22 · 30-day returns' };
+
+// ---------- build ----------
+let built = false;
+function build() {
+  if (built) return; built = true;
+  $$('[data-mark]').forEach(el => { el.innerHTML = MARK(el.dataset.white); if (!el.style.width) { el.style.width = el.dataset.mark + 'px'; el.style.height = el.dataset.mark + 'px'; } });
+  $$('[data-ico]').forEach(el => { el.innerHTML = ico(el.dataset.ico, Number(el.dataset.sw ?? 1.8)); });
+
+  // pills + ticks
+  ['Intro', 'Problem', 'Use Case', 'Call to Action'].forEach((n, i) => {
+    $('#pills').insertAdjacentHTML('beforeend', `<div class="pill" style="left:${110 + i * 310}px"><span>${n}</span><div class="ph"></div></div>`);
+  });
+  for (let i = 0; i <= 60; i++) $('#ticks').insertAdjacentHTML('beforeend', `<i style="left:${i * 1218 / 60}px"></i>`);
+
+  // mist
+  const mist = [['#ffc4a6', -60, 560, 240], ['#ffb08c', 330, 620, 290], ['#f2d6ff', 760, 520, 220], ['#ffc9ad', 1000, 520, 270], ['#ff9f74', 520, 460, 170], ['#ffe0cf', 150, 420, 200]];
+  mist.forEach(([c, x, w, h]) => $('#mist').insertAdjacentHTML('beforeend', `<i style="left:${x}px;width:${w}px;height:${h}px;background:radial-gradient(closest-side,${c},${c}00)"></i>`));
+
+  // intro receipts
+  const recs = [
+    [{ store: 'Corner Hardware', sub: 'Since 1962', items: [['Cordless drill', '129.00'], ['Bits x24', '18.50']], total: '$147.50', date: '02/09/2026', w: 170 }, 110, 110, -13, 0],
+    [{ store: 'Ember', sub: 'ember.com · order 4471', items: [['Ember Mug 2', '149.95'], ['Shipping', '0.00']], total: '$149.95', date: '19/10/2026', w: 165 }, 930, 80, 11, 1.5],
+    [{ store: 'Northwind Shoes', sub: 'Outlet 12', items: [['Trail runner 10', '180.00'], ['Socks', '12.00']], total: '$192.00', date: '28/10/2026', w: 160, crum: true }, 150, 400, 8, 2.5],
+    [{ ...HARBOR, w: 175, faded: true }, 950, 380, -9, 0],
+  ];
+  recs.forEach(([r, x, y, rot, bl], i) => $('#s1recs').insertAdjacentHTML('beforeend', `<div class="abs r1" data-x="${x}" data-y="${y}" data-r="${rot}" data-b="${bl}" style="left:${x}px;top:${y}px">${receipt(r)}</div>`));
+
+  // logo letters
+  'Kept'.split('').forEach(c => $('#lw1').insertAdjacentHTML('beforeend', `<span class="ch" style="background:linear-gradient(180deg,#ff8a4a,#ff4e12 60%,#d63a08);-webkit-background-clip:text;color:transparent;padding:0 2px">${c}</span>`));
+
+  // typers
+  $$('#l3,#l4b,#l13a,#l13b').forEach(el => {
+    for (const span of [...el.children]) { const txt = span.textContent; span.innerHTML = [...txt].map(c => `<span class="ch">${c}</span>`).join(''); }
+    el.insertAdjacentHTML('beforeend', '<div class="caret"></div>');
+  });
+
+  // S3 icons
+  ['phone', 'kettle', 'sneaker', 'headphones', 'lamp'].forEach(n => $('#s3ico').insertAdjacentHTML('beforeend', `<div class="ico">${ico(n)}</div>`));
+  ['tag', 'mug', 'watch', 'drill', 'sneaker', 'lamp'].forEach(n => $('#s10ico').insertAdjacentHTML('beforeend', `<div class="ico" style="color:#c8521f">${ico(n)}</div>`));
+
+  // ring tiles
+  const tiles = [
+    `<div style="transform:scale(.8)">${receipt({ store: 'Corner Hardware', sub: 'Since 1962', items: [['Drill', '129.00']], total: '$129.00', date: '02/09/2026', w: 150, crum: true })}</div>`,
+    `<div class="tile mail"><div class="mh"><div class="av">N</div>Northwind Shoes</div><div class="ms">Your order #4471 is on its way</div><div class="mb">Keep this email as your receipt for returns…</div></div>`,
+    `<div class="tile" style="width:170px;padding:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:#111">${Array.from({ length: 9 }, (_, i) => `<div style="height:48px;border-radius:4px;background:${['#c47a52', '#6d8a6a', '#e7cfa8', '#4b5a7a', '#fffdf7', '#a0523a', '#8fb0c8', '#d9b07a', '#3e3a36'][i]};${i === 4 ? 'background:repeating-linear-gradient(180deg,#fffdf7 0 5px,#d8d0c8 5px 6px);' : ''}"></div>`).join('')}</div>`,
+    `<div class="tile" style="width:150px;padding:14px;display:flex;gap:10px;align-items:center"><div style="width:38px;height:46px;border-radius:6px;background:#e5432f;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center">PDF</div><div><div style="font-weight:650">invoice_0921</div><div style="color:#8b7468;font-size:11px">Downloads</div></div></div>`,
+    `<div class="sticky">return by ???<br><span style="font-size:17px">the blue one</span></div>`,
+    `<div class="tile" style="width:210px;padding:12px;display:flex;flex-direction:column;gap:6px;background:#fff"><div class="bub in">did you keep the box??</div><div class="bub me">…which box</div></div>`,
+    `<div class="box"><b>RECEIPTS 2024</b></div>`,
+    `<div class="tile" style="width:180px;padding:12px"><div style="font-weight:700;font-size:15px">Inbox</div><div style="display:flex;justify-content:space-between;margin-top:8px;color:#5b463c"><span>Promotions</span><b style="color:#2e5bff">1,284</b></div><div style="display:flex;justify-content:space-between;margin-top:5px;color:#5b463c"><span>Updates</span><b style="color:#2e5bff">342</b></div></div>`,
+    `<div style="transform:scale(.78)">${receipt({ ...HARBOR, w: 160, faded: true })}</div>`,
+    `<div class="tile" style="width:180px;padding:14px;background:#f3f6ff"><div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#4a5ea8">WARRANTY CARD</div><div style="font-weight:650;margin-top:6px;line-height:1.3">Mail within 30 days of purchase to register</div></div>`,
+    `<div class="tile" style="width:200px;padding:11px;display:flex;gap:9px;align-items:center;background:rgba(255,250,247,.98)"><div style="width:30px;height:30px;border-radius:8px;background:#2a7a3f;flex:none"></div><div><div style="font-weight:650;font-size:12px">Order shipped</div><div style="color:#8b7468;font-size:11px">Tracking #8812… arriving Tue</div></div></div>`,
+  ];
+  const R = mul(11);
+  tiles.forEach((h, i) => { const a = i / tiles.length * Math.PI * 2 + (R() - .5) * .3; $('#ring').insertAdjacentHTML('beforeend', `<div class="abs rt" data-a="${a}" data-r="${(R() - .5) * 18}" style="left:0;top:0">${h}</div>`); });
+
+  // calendar: Nov 2026 starts Sunday
+  const days = $('#days');
+  for (let i = 0; i < 6; i++) days.insertAdjacentHTML('beforeend', '<div class="cell"></div>');
+  for (let d = 1; d <= 30; d++) days.insertAdjacentHTML('beforeend', `<div class="cell d${d}" style="${d > 8 ? 'color:#b9a89f' : ''}">${d}</div>`);
+  days.insertAdjacentHTML('beforeend', '<div class="band" id="band1" style="left:0;top:0"></div><div class="band" id="band2" style="top:50px"></div><div class="abs" id="today" style="width:42px;height:42px;border-radius:50%;background:#24150e;z-index:1"></div><div class="abs" id="closed" style="font-size:12px;font-weight:700;color:#fff;background:#24150e;padding:4px 9px;border-radius:12px;z-index:3;white-space:nowrap">Closed 7 Nov</div>');
+
+  // Simple.
+  'Simple.'.split('').forEach(c => $('#l7').insertAdjacentHTML('beforeend', `<span class="ch" style="position:relative">${c}<i class="guide" style="left:0;top:-300px;bottom:-300px;width:1px;position:absolute"></i></span>`));
+
+  // scan
+  $('#deskrc').innerHTML = receipt({ ...HARBOR, w: 260 });
+  $('#camrc').innerHTML = receipt({ ...HARBOR, w: 240 });
+  for (let i = 0; i < 4; i++) $('#brk').insertAdjacentHTML('beforeend', `<div class="abs bk" style="width:34px;height:34px;border:4px solid #fff;border-radius:4px;${['border-right:0;border-bottom:0;border-top-left-radius:14px', 'border-left:0;border-bottom:0;border-top-right-radius:14px', 'border-right:0;border-top:0;border-bottom-left-radius:14px', 'border-left:0;border-top:0;border-bottom-right-radius:14px'][i]}"></div>`);
+  [['Store', 132, 30], ['Item', 186, 22], ['Total', 238, 24], ['Date', 262, 20]].forEach(([n, y, h]) => $('#hl').insertAdjacentHTML('beforeend', `<div class="abs hlb" data-y="${y}" style="left:50px;width:232px;top:${y}px;height:${h}px;border:2px solid #ff6a2a;border-radius:6px;background:rgba(255,106,42,.12)"><span style="position:absolute;right:-6px;top:-13px;background:#ff5a1c;color:#fff;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:9px">${n}</span></div>`));
+
+  // grid
+  const items = [['headphones', 'Sony WH-1000XM5', '$349', 'orange', 'Return · 6 d', '#ffe9de'], ['drill', 'Cordless drill', '$129', 'green', 'Warranty · 3 y', '#e8f1e9'], ['sneaker', 'Trail runner 10', '$180', 'orange', 'Return · 12 d', '#fff0e3'], ['mug', 'Ember Mug 2', '$150', 'green', 'Warranty · 1 y', '#f1e9ff'],
+    ['watch', 'Garmin Forerunner', '$499', 'green', 'Warranty · 2 y', '#e6eef8'], ['kettle', 'Smeg kettle', '$219', 'green', 'Warranty · 2 y', '#fdeee6'], ['lamp', 'Desk lamp', '$89', 'orange', 'Return · 20 d', '#fff6dd'], ['phone', 'iPhone case', '$59', 'grey', 'Receipt saved', '#f0ebe8']];
+  items.forEach(([ic, n, p, c, ch, bg], i) => $('#grid').insertAdjacentHTML('beforeend', `<div class="gcard" style="left:${192 + (i % 4) * 142}px;top:${92 + Math.floor(i / 4) * 154}px"><div class="th" style="background:${bg}">${ico(ic, 1.5)}</div><div class="n">${n}</div><div class="p">${p}</div><div class="chip ${c}">${ch}</div></div>`));
+
+  // qr
+  const Q = mul(5); let q = '';
+  const finder = (x, y) => `<rect x="${x}" y="${y}" width="7" height="7"/><rect x="${x + 1}" y="${y + 1}" width="5" height="5" style="fill:#fff"/><rect x="${x + 2}" y="${y + 2}" width="3" height="3"/>`;
+  for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) { if ((x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16)) continue; if (Q() > .52) q += `<rect x="${x}" y="${y}" width="1" height="1"/>`; }
+  $('#qr').innerHTML = q + finder(0, 0) + finder(18, 0) + finder(0, 18);
+
+  // sky
+  const K = mul(23);
+  for (let i = 0; i < 22; i++) { const s = 180 + K() * 380; $('#sky').insertAdjacentHTML('beforeend', `<div class="abs cl" data-sp="${(K() - .5) * 30}" style="left:${K() * 1300 - 100}px;top:${K() * 760 - 120}px;width:${s * 1.6}px;height:${s}px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,250,246,${.55 + K() * .4}),rgba(255,250,246,0));filter:blur(${10 + K() * 14}px)"></div>`); }
+  for (let i = 0; i < 3; i++) $('#ring14').insertAdjacentHTML('beforeend', `<div class="abs" style="left:-100px;top:-100px;width:200px;height:200px;border-radius:50%;border:2px solid rgba(255,255,255,.8)"></div>`);
+  for (let i = 0; i < 3; i++) $('#pulse7').insertAdjacentHTML('beforeend', `<div class="abs" style="left:-100px;top:-100px;width:200px;height:200px;border-radius:50%;border:2px solid rgba(255,90,28,.5)"></div>`);
+}
+
+// typewriter: show n chars, caret after them
+function typer(el, n, caretOn) {
+  const chs = $$('.ch', el), car = $('.caret', el);
+  chs.forEach((c, i) => c.style.visibility = i < n ? 'visible' : 'hidden');
+  const last = chs[Math.max(0, Math.min(n, chs.length) - 1)];
+  if (n <= 0) { const f = chs[0]; car.style.left = (f.offsetLeft - 4) + 'px'; } else car.style.left = (last.offsetLeft + last.offsetWidth + 3) + 'px';
+  car.style.top = (chs[0].offsetTop + 4) + 'px';
+  car.style.opacity = caretOn ? 1 : 0;
+}
+const blink = t => (Math.floor(t * 2.2) % 2 === 0);
+function mesh(el, t, ph = 0) {
+  el.style.setProperty('--x1', 18 + 8 * Math.sin(t * .5 + ph) + '%'); el.style.setProperty('--y1', 28 + 6 * Math.cos(t * .4 + ph) + '%');
+  el.style.setProperty('--x2', 82 + 7 * Math.sin(t * .37 + 1 + ph) + '%'); el.style.setProperty('--y2', 22 + 8 * Math.sin(t * .45 + ph) + '%');
+  el.style.setProperty('--x3', 66 + 9 * Math.cos(t * .33 + ph) + '%'); el.style.setProperty('--y3', 86 + 5 * Math.sin(t * .5 + 2 + ph) + '%');
+  el.style.setProperty('--x4', 14 + 6 * Math.sin(t * .42 + 3 + ph) + '%');
+}
+function tap(touch, ring, t, at, x, y) {
+  const a = P(t, at - .35, at - .05), d = P(t, at + .05, at + .35);
+  S(touch, { o: a * (1 - d) * .95, s: L(1.25, 1, out3(a)) * (t > at - .05 && t < at + .1 ? .86 : 1) });
+  touch.style.left = x + 'px'; touch.style.top = y + 'px';
+  const r = P(t, at, at + .5); S(ring, { o: (r > 0 && r < 1) ? (1 - r) * .9 : 0, s: 1 + r * 1.8 }); ring.style.left = x + 'px'; ring.style.top = y + 'px';
+}
+
+// ---------- the timeline ----------
+const CH = [0, 6.2, 17.5, 38.5, 45];
+function seek(t) {
+  build();
+  // chapter bar
+  const pills = $$('.pill');
+  pills.forEach((p, i) => {
+    const a = CH[i], b = CH[i + 1];
+    const act = vis(t, a, b, i === 0 ? 0 : .25, i === 3 ? 0 : .25);
+    p.style.background = `rgb(${L(255, 15, act)},${L(255, 11, act)},${L(255, 9, act)})`;
+    p.style.color = act > .5 ? '#fff' : '#130d0a';
+    const ph = p.querySelector('.ph'); ph.style.left = (P(t, a, b) * 290) + 'px'; ph.style.opacity = act;
+  });
+  const ci = CH.findIndex((c, i) => t >= c && t < CH[i + 1]); const cidx = ci < 0 ? 3 : ci;
+  const phx = 110 + cidx * 310 + P(t, CH[cidx], CH[cidx + 1]) * 290;
+  $('#under').style.left = (phx - 150) + 'px';
+  $('#edge').style.left = (100 + 410 + Math.sin(t * .45) * 380) + 'px';
+  $$('#ticks i').forEach((k, i) => { const d = Math.abs(i / 60 - t / LEN) * 60; const h = C(1 - d / 2.5); k.style.background = `rgba(${L(90, 255, h)},${L(30, 90, h)},${L(5, 28, h)},${L(.32, 1, h)})`; k.style.height = L(18, 22, h) + 'px'; k.style.top = L(0, -2, h) + 'px'; });
+  $('#dim').style.opacity = io(P(t, 44.1, 45)) * .92;
+
+  // paper + mist
+  $$('#mist i').forEach((m, i) => m.style.transform = `translateX(${Math.sin(t * .35 + i * 1.7) * 40}px) scaleY(${1 + Math.sin(t * .5 + i) * .08})`);
+
+  // ===== S1/S2 intro 0 – 6.4 =====
+  if (on('s1', t, 0, 6.45)) {
+    const v = vis(t, 0, 6.45, 0, .45), out = io(P(t, 6.0, 6.45));
+    $('#s1').style.opacity = v; $('#s1').style.filter = out > .01 ? `blur(${out * 14}px)` : 'none';
+    mesh($('#mesh1'), t);
+    const up = out5(P(t, 0, 1.4)), dim = io(P(t, 3.3, 4.0));
+    S('#p1', { y: L(560, 0, up) - dim * 30 + Math.sin(t * 1.2) * 4, rx: L(28, 4, up) + Math.sin(t * .8) * 2, ry: Math.sin(t * .6) * 4, s: L(.88, 1, up) * L(1, .9, dim), o: L(1, .18, dim), b: dim * 9 });
+    const n = P(t, 1.55, 2.15);
+    S('#n1', { o: C(n * 3), y: L(-40, 0, back(n)), s: L(.92, 1, out3(n)) });
+    $$('.r1').forEach((r, i) => {
+      const k = out5(P(t, .3 + i * .18, 1.5 + i * .18)), sc = io(P(t, 3.2, 4.2));
+      const x0 = +r.dataset.x, dx = (x0 < 600 ? -1 : 1);
+      S(r, { o: k * L(1, .55, sc), x: dx * (1 - k) * 260 + dx * sc * 120 + Math.sin(t * .9 + i) * 8, y: (1 - k) * 120 + Math.cos(t * .7 + i * 2) * 10 - sc * 40, r: +r.dataset.r * (1 + (1 - k)) + Math.sin(t * .5 + i) * 3, s: L(1.15, 1, k), b: +r.dataset.b + (1 - k) * 8 + sc * 3 });
+    });
+    // logo
+    const lets = $$('#lw1 .ch');
+    lets.forEach((c, i) => { const k = P(t, 3.45 + i * .09, 4.1 + i * .09); S(c, { o: C(k * 2.5), y: L(-150, 0, back(k)), r: L([-18, 12, -10, 16][i], 0, out3(k)), b: (1 - out3(k)) * 10 }); });
+    const m = P(t, 4.05, 4.7); S('#lm1', { o: C(m * 3), s: L(.3, 1, back(m)), r: L(-30, 0, out3(m)) });
+    words('#tag1').forEach((w, i) => S(w, W(t, 4.75 + i * .1)));
+  }
+
+  // paper visibility
+  const pv = Math.max(vis(t, 6.0, 17.75, .45, .3), vis(t, 29.3, 32.5, .35, .3), vis(t, 38.3, 41.4, .3, .5));
+  $('#paper').style.opacity = pv; $('#paper').style.display = pv > 0 ? 'block' : 'none';
+
+  // ===== S3 6.2 – 9.7 =====
+  if (on('s3', t, 6.2, 9.75)) {
+    const el = $('#l3'), n = $$('.ch', el).length;
+    const typed = Math.floor(C((t - 6.45) * 21, 0, n));
+    typer(el, typed, typed < n ? true : blink(t) && t < 8.6);
+    const ex = W(t, 0, 9.3); S(el, { o: ex.o, y: ex.y, b: ex.b, x: -io(P(t, 8.2, 9.3)) * 40 });
+    if (!el.dataset.m) { const chs = $$('.ch', el); el.dataset.m = 1; el._sx = chs[12].offsetLeft; el._ex = chs[chs.length - 1].offsetLeft; }
+    const sx = el._sx, ex2 = el._ex;
+    $$('#s3ico .ico').forEach((ic, i) => {
+      const k = P(t, 7.45 + i * .11, 7.85 + i * .11);
+      const hx = sx + i * 50, hy = 238;                            // a row over "something"
+      const tg = [[sx - 270, 196], [ex2 + 70, 206], [sx - 90, 158], [sx + 320, 146], [ex2 - 90, 178]][i];
+      const m = io(P(t, 8.25 + i * .06, 9.0 + i * .06));
+      const x = L(hx, tg[0], m), y = L(hy, tg[1], m) - Math.sin(m * Math.PI) * 70;
+      const q = io(P(t, 9.25, 9.65));
+      S(ic, { o: C(k * 3) * (1 - q), x: x - io(P(t, 8.2, 9.3)) * 40, y: y + (1 - back(k)) * 30, s: L(.3, 1, back(k)), r: (1 - k) * -40 + m * [20, -15, 10, -20, 12][i], b: q * 10 });
+    });
+  }
+
+  // ===== S4 9.6 – 12.1 =====
+  if (on('s4', t, 9.6, 12.15)) {
+    const ws = words('#l4a');
+    ws.forEach((w, i) => S(w, W(t, 9.72 + i * .13, 11.75)));
+    const dimA = io(P(t, 10.85, 11.2));
+    $('#l4a').style.opacity = L(1, .35, dimA); $('#l4a').style.transform = `translateY(${-dimA * 26}px)`;
+    const el = $('#l4b'), n = $$('.ch', el).length, typed = Math.floor(C((t - 11.05) * 16, 0, n));
+    typer(el, typed, t > 10.95 && (typed < n || blink(t)));
+    const e = W(t, 0, 11.75); S(el, { o: e.o, y: e.y - dimA * 10, b: e.b });
+  }
+
+  // ===== S5 12.0 – 15.0 =====
+  if (on('s5', t, 12.0, 15.05)) {
+    const tiles = $$('#ring .rt');
+    tiles.forEach((el, i) => {
+      if (!el._w) { el._w = el.firstElementChild.offsetWidth; el._h = el.firstElementChild.offsetHeight; }
+      const k = out5(P(t, 12.05 + i * .055, 12.85 + i * .055)), q = io(P(t, 14.55, 15.05));
+      const a = +el.dataset.a + (t - 12) * .12;
+      const rad = L(1.9, 1, k) + q * .8;
+      const x = 620 + Math.cos(a) * 455 * rad, y = 345 + Math.sin(a) * 240 * rad;
+      S(el, { o: C(k * 2) * (1 - q), x: x - el._w / 2, y: y - el._h / 2, s: L(.55, 1, k) * (1 + q * .2), r: +el.dataset.r + Math.sin(t * .8 + i) * 2.5, ry: -Math.cos(a) * 14, b: (1 - k) * 12 + q * 10 });
+    });
+    words('#l5').forEach((w, i) => S(w, W(t, 12.45 + i * .14, 14.55)));
+  }
+
+  // ===== S6 14.9 – 17.6 =====
+  if (on('s6', t, 14.9, 17.65)) {
+    const k = out5(P(t, 14.95, 15.7)), q = io(P(t, 17.2, 17.6));
+    S('#cal', { o: k * (1 - q), y: (1 - k) * 60 - q * 20, s: L(.94, 1, k), r: L(-4, -1.5, k), b: (1 - k) * 10 + q * 12 });
+    const days = $('#days');
+    if (!days._m) { days._m = 1; const c1 = $('.d1'), c7 = $('.d7'), c2 = $('.d2'), c8 = $('.d8'); days._a = c1; days._r1 = [c1.offsetLeft, c1.offsetTop, c1.offsetWidth]; days._r2 = [c2.offsetLeft, c2.offsetTop, c7.offsetLeft + c7.offsetWidth - c2.offsetLeft]; days._t = [c8.offsetLeft + c8.offsetWidth / 2, c8.offsetTop]; }
+    const b = out3(P(t, 15.5, 16.15)), g = io(P(t, 16.45, 16.75));
+    const col = `rgb(${L(255, 226, g)},${L(106, 218, g)},${L(42, 213, g)})`;
+    const b1 = $('#band1'), b2 = $('#band2');
+    const [x1, y1, w1] = days._r1, [x2, y2, w2] = days._r2;
+    b1.style.left = (x1 - 4) + 'px'; b1.style.top = y1 + 'px'; b1.style.width = (w1 + 8) * C(b * 4) + 'px'; b1.style.background = col; b1.style.opacity = b > 0 ? 1 : 0;
+    b2.style.left = (x2 - 4) + 'px'; b2.style.top = y2 + 'px'; b2.style.width = (w2 + 8) * C((b - .2) / .8) + 'px'; b2.style.background = col; b2.style.opacity = b > .2 ? 1 : 0;
+    $$('.d1,.d2,.d3,.d4,.d5,.d6,.d7').forEach(d => d.style.color = g > .5 ? '#8b7468' : (b > 0 ? '#fff' : '#24150e'));
+    const td = P(t, 16.1, 16.45); const today = $('#today');
+    today.style.left = (days._t[0] - 21) + 'px'; today.style.top = days._t[1] + 'px'; S(today, { o: C(td * 3), s: L(.3, 1, back(td)) });
+    $('.d8').style.color = td > .3 ? '#fff' : '#24150e';
+    const cl = P(t, 16.6, 17.0); const cE = $('#closed'); cE.style.left = (x2 + w2 - 70) + 'px'; cE.style.top = (y2 - 30) + 'px'; S(cE, { o: C(cl * 3), s: L(.5, 1, back(cl)), y: (1 - cl) * 10 });
+    const ws = words('#l6');
+    [15.35, 15.5, 15.65, 16.45, 16.62].forEach((a, i) => S(ws[i], W(t, a, 17.2)));
+  }
+
+  // ===== S7 17.5 – 20.5 Simple. =====
+  if (on('s7', t, 17.55, 20.55)) {
+    const v = vis(t, 17.55, 20.55, .12, .3); $('#s7').style.opacity = v;
+    const k = out5(P(t, 17.65, 18.75));
+    const jit = [-50, 34, -24, 56, -36, 22, 0];
+    const chs = $$('#l7 .ch'), gone = io(P(t, 19.15, 19.6));
+    chs.forEach((c, i) => {
+      S(c, { x: (i - 3) * 70 * (1 - k), y: jit[i] * (1 - k), o: C(P(t, 17.6 + i * .04, 17.9 + i * .04) * 1) * (1 - gone), b: gone * 14 });
+      c.querySelector('.guide').style.opacity = C(P(t, 17.6, 17.9)) * (1 - io(P(t, 18.7, 19.15)));
+    });
+    $('#l7').style.transform = `scale(${L(1, .5, gone)})`;
+    ['#g7a', '#g7b'].forEach(g => S(g, { o: C(P(t, 17.6, 17.9)) * (1 - io(P(t, 18.7, 19.15))), sx: L(.2, 1, out5(P(t, 17.6, 18.4))) }));
+    const mz = P(t, 19.35, 19.95), thru = io(P(t, 20.05, 20.55));
+    S('#m7', { o: C(mz * 3) * (1 - thru), s: L(.2, 1, back(mz)) * L(1, 5, thru), r: L(-25, 0, out3(mz)), b: thru * 6 });
+    $('#mesh7').style.opacity = io(P(t, 19.3, 19.9)); mesh($('#mesh7'), t, 1);
+    $$('#pulse7 div').forEach((p, i) => { const r = P(t, 19.6 + i * .14, 20.4 + i * .14); S(p, { o: r > 0 && r < 1 ? (1 - r) * .9 : 0, s: .7 + out3(r) * 2.2 }); });
+  }
+
+  // ===== S8 + S9 20.2 – 29.7 phone =====
+  if (on('s8', t, 20.25, 29.75)) {
+    const v = vis(t, 20.25, 29.75, .3, .45); $('#s8').style.opacity = v;
+    const md = io(P(t, 24.9, 25.7));
+    $('#desk').style.opacity = 1 - md; $('#mesh8').style.opacity = md; mesh($('#mesh8'), t, 2);
+    $('#desk').style.transform = `scale(${1.06 + (t - 20.2) * .006}) translateX(${-(t - 20.2) * 3}px)`;
+    const up = out5(P(t, 20.25, 21.15)), q = io(P(t, 29.25, 29.75));
+    const sway = md;
+    S('#p8', { y: L(620, 0, up) + q * 80, r: L(-6, 0, out3(up)), ry: Math.sin(t * .7) * 5 * sway, rx: Math.sin(t * .5) * 2 * sway, s: L(1, .97, md) * L(1, .92, q), b: q * 10, o: 1 - q * .6 });
+    // camera content
+    const br = out3(P(t, 21.0, 21.55));
+    const rc = $('#camrc'); if (!rc._h) rc._h = rc.offsetHeight;
+    const box = [36, 108, 292, 120 + rc._h + 10];
+    $$('#brk .bk').forEach((b, i) => {
+      const sp = L(40, 0, br);
+      const x = (i % 2 ? box[2] - 34 + sp : box[0] - sp), y = (i < 2 ? box[1] - sp : box[3] - 34 + sp);
+      S(b, { x, y, o: C(br * 2) * (1 - io(P(t, 23.9, 24.1))) });
+    });
+    $('#vign').style.opacity = L(.2, 1, br) * (1 - P(t, 23.9, 24.0));
+    const sl = P(t, 21.6, 22.9); S('#scanl', { y: L(box[1], box[3], io(sl)), o: sl > 0 && sl < 1 ? 1 : 0 });
+    $$('#hl .hlb').forEach((h, i) => { const k = P(t, 22.2 + i * .33, 22.55 + i * .33); S(h, { o: C(k * 3) * (1 - io(P(t, 23.9, 24.1))), s: L(1.15, 1, back(k)) }); });
+    const ht = $('#hintt'); ht.textContent = t < 21.55 ? 'Point at a receipt' : t < 23.55 ? 'Reading…' : 'Found 4 details';
+    const gk = P(t, 23.55, 23.95); S('#got', { o: C(gk * 3) * (1 - io(P(t, 24.3, 24.5))), y: (1 - back(gk)) * 30, s: L(.8, 1, back(gk)) });
+    const fl = P(t, 23.98, 24.35); $('#flash').style.opacity = fl > 0 && fl < 1 ? (fl < .2 ? fl * 4 : (1 - fl) * 1.0) * .9 : 0;
+    const cam = io(P(t, 24.35, 24.95));
+    S('#cam', { s: L(1, .9, cam), o: 1 - cam, b: cam * 6 });
+    S('#camrc', { r: -2.5, y: L(0, 6, Math.sin(t * 2) * .5 + .5) * (1 - br) });
+    S('#item', { y: L(708, 0, out5(P(t, 24.4, 25.15))), o: C(P(t, 24.4, 24.7) * 3) });
+    S('#ptile', W(t, 24.75, 1e9, .5));
+    S('#pname', W(t, 24.95, 1e9, .5)); S('#psub', W(t, 25.05, 1e9, .5));
+    ['#r1', '#r2', '#r3', '#r4'].forEach((r, i) => { const k = P(t, 25.4 + i * .3, 25.85 + i * .3); S(r, { o: C(k * 3), y: (1 - back(k)) * 24, s: L(.96, 1, out3(k)) }); });
+    const swk = out3(P(t, 27.6, 27.85)); const sw = $('#sw8'); sw.style.background = `rgb(${L(227, 255, swk)},${L(219, 90, swk)},${L(214, 28, swk)})`; sw.firstElementChild.style.transform = `translateX(${swk * 20}px)`;
+    // the phone sits at card x 445..795, y 40; screen origin = +11
+    const px = 445 + 11, py = 40 + 11;
+    tap($('#t8'), $('#rg8'), t, 27.6, px + 290, py + 593);
+    ['#f1', '#f2', '#f3', '#f4'].forEach((f, i) => { const k = P(t, 25.9 + i * .38, 26.4 + i * .38), qq = io(P(t, 29.1, 29.5)); S(f, { o: C(k * 3) * (1 - qq), s: L(.6, 1, back(k)), y: (1 - out3(k)) * 30 + Math.sin(t * 1.3 + i * 1.6) * 6 - qq * 20, x: (i % 2 ? 1 : -1) * ((1 - out3(k)) * -40 + qq * 40), b: qq * 8 }); });
+  }
+
+  // ===== S10 29.5 – 32.4 =====
+  if (on('s10', t, 29.45, 32.5)) {
+    words('#l10a').forEach((w, i) => S(w, W(t, 29.6 + i * .16, 31.0)));
+    words('#l10b').forEach((w, i) => S(w, W(t, 30.2 + i * .13, 31.0)));
+    words('#l10c').forEach((w, i) => S(w, W(t, 31.25 + i * .22, 32.1, .65)));
+    $$('#s10ico .ico').forEach((ic, i) => {
+      const a = i / 6 * Math.PI * 2 + (t - 31.2) * .9;
+      const k = out3(P(t, 31.3 + i * .06, 31.8 + i * .06)), q = io(P(t, 32.05, 32.4));
+      S(ic, { o: k * (1 - q) * .9, x: 600 + Math.cos(a) * L(120, 330, k) - 20, y: 330 + Math.sin(a) * L(60, 130, k) - 20, s: L(.4, .85, k), r: Math.sin(t * 2 + i) * 14, b: q * 8 });
+    });
+  }
+
+  // ===== S11 32.2 – 35.8 monitor =====
+  if (on('s11', t, 32.2, 35.85)) {
+    const v = vis(t, 32.2, 35.85, .35, .2); $('#s11').style.opacity = v;
+    const push = io(P(t, 32.2, 35.85)), thru = io(P(t, 35.45, 35.85));
+    $('#room').style.transform = `scale(${L(.9, 1.04, push) * L(1, 1.6, thru)})`;
+    $('#room').style.filter = thru > .01 ? `blur(${thru * 8}px)` : 'none';
+    $$('#grid .gcard').forEach((g, i) => { const k = P(t, 32.6 + i * .085, 33.05 + i * .085); const hov = i === 5 ? out3(P(t, 35.0, 35.25)) : 0; S(g, { o: C(k * 3), y: (1 - back(k)) * 22 - hov * 6, s: L(.9, 1, out3(k)) * (1 + hov * .04) }); g.style.boxShadow = `0 ${4 + hov * 14}px ${14 + hov * 20}px rgba(80,30,5,${.08 + hov * .1}),0 0 0 ${1 + hov}px rgba(255,90,28,${.05 + hov * .5})`; });
+    $('#count').textContent = '$' + Math.round(4212 * out3(P(t, 32.95, 34.4))).toLocaleString('en-US');
+    const tk = P(t, 34.35, 34.8); S('#toast', { o: C(tk * 3), x: (1 - out5(tk)) * 60, s: L(.95, 1, out3(tk)) });
+    // cursor in card coords: monitor screen origin 223,57; scale about 620,330
+    const sc = L(.9, 1.04, push) * L(1, 1.6, thru);
+    const ck = io(P(t, 34.55, 35.15));
+    const cx = L(1080, 223 + 192 + 142 + 90, ck), cy = L(560, 57 + 92 + 154 + 70, ck);
+    S('#cur', { x: 620 + (cx - 620) * sc, y: 330 + (cy - 330) * sc, o: C(P(t, 34.4, 34.6) * 3) * (1 - thru) });
+  }
+
+  // ===== S12 35.6 – 38.6 =====
+  if (on('s12', t, 35.6, 38.65)) {
+    const v = vis(t, 35.6, 38.65, .3, .35); $('#s12').style.opacity = v; mesh($('#mesh12'), t, 3);
+    const k = out5(P(t, 35.6, 36.2)), q = io(P(t, 38.25, 38.65));
+    S('#p12', { s: L(1.18, 1, k) * L(1, .94, q), b: (1 - k) * 10 + q * 8, y: q * 30, ry: Math.sin(t * .8) * 4, rx: Math.sin(t * .6) * 1.5 });
+    const n = P(t, 35.95, 36.45); S('#n12', { o: C(n * 3), y: L(-40, 0, back(n)), s: L(.92, 1, out3(n)) * (t > 36.6 && t < 36.75 ? .97 : 1) });
+    const r = out5(P(t, 36.75, 37.2));
+    S('#ret', { o: C(P(t, 36.75, 36.95) * 3), y: L(260, 0, r), s: L(.9, 1, r) });
+    $('#ret').style.borderRadius = L(24, 0, r) + 'px';
+    const px = 445 + 11, py = 40 + 11;
+    tap($('#t12'), $('#rg12'), t, 36.62, px + 164, py + 312);
+    tap($('#t12'), $('#rg12'), t, 37.3, px + 164, py + 412);
+    if (t < 36.95) { const a = 36.62; tap($('#t12'), $('#rg12'), t, a, px + 164, py + 312); }
+    const pr = t > 37.25 && t < 37.42;
+    S('#btn12', { s: pr ? .96 : 1 });
+    const spinOn = t > 37.32 && t < 37.72, done = P(t, 37.72, 37.95);
+    $('#btnt').style.opacity = t < 37.32 ? 1 : 0;
+    S('#spin', { o: spinOn ? 1 : 0, r: (t - 37.3) * 720 });
+    S('#bchk', { o: C(done * 3), s: L(.3, 1, back(done)) });
+    $('#btn12').style.background = done > 0 ? '#1d8a4b' : '#ff5a1c';
+    const lk = P(t, 37.85, 38.3); S('#label12', { o: C(lk * 3), y: (1 - back(lk)) * 30, s: L(.9, 1, out3(lk)) });
+    const fk = P(t, 37.95, 38.35); S('#f12', { o: C(fk * 3) * (1 - q), s: L(.6, 1, back(fk)), y: (1 - out3(fk)) * 20 + Math.sin(t * 1.4) * 5 });
+    const fb = P(t, 36.2, 36.65); S('#f12b', { o: C(fb * 3) * (1 - q), s: L(.6, 1, back(fb)), y: (1 - out3(fb)) * 20 + Math.sin(t * 1.2 + 2) * 5 });
+  }
+
+  // ===== S13 38.4 – 41.3 =====
+  if (on('s13', t, 38.4, 41.35)) {
+    const a = $('#l13a'), na = $$('.ch', a).length;
+    const typedA = t < 39.55 ? Math.floor(C((t - 38.65) * 13, 0, na)) : Math.floor(C(na - (t - 39.55) * 20, 0, na));
+    typer(a, typedA, t < 39.95 && (typedA < na && t < 39.2 || blink(t) || t > 39.5));
+    a.style.display = t < 39.95 ? 'block' : 'none';
+    const b = $('#l13b'), nb = $$('.ch', b).length, typedB = Math.floor(C((t - 40.0) * 13, 0, nb));
+    b.style.display = t >= 39.95 ? 'block' : 'none';
+    typer(b, typedB, typedB < nb || blink(t));
+    const e = W(t, 0, 40.95, .5, .4); S(b, { o: e.o, y: e.y, b: e.b, s: L(1, 1.06, io(P(t, 40.6, 41.3))) });
+  }
+
+  // ===== S14 41.0 – 45 =====
+  if (on('s14', t, 41.0, 45.01)) {
+    const v = vis(t, 41.0, 45.01, .4, 0); $('#s14').style.opacity = v;
+    $('#sky').style.transform = `scale(${1.08 + (t - 41) * .025})`;
+    $$('#sky .cl').forEach((c, i) => c.style.transform = `translateX(${(t - 41) * +c.dataset.sp}px)`);
+    const m = P(t, 41.25, 41.85);
+    const slide = io(P(t, 41.9, 42.55));
+    S('#lm14', { o: C(m * 3), s: L(.2, 1, back(m)), r: L(-30, 0, out3(m)) });
+    const lw = $('#lw14'); if (!lw._w) lw._w = lw.offsetWidth;
+    $('#lwrap14').style.width = (lw._w * slide) + 'px';
+    S(lw, { x: (1 - slide) * -40, o: slide });
+    $$('#ring14 div').forEach((p, i) => { const r = P(t, 41.4 + i * .15, 42.4 + i * .15); S(p, { o: r > 0 && r < 1 ? (1 - r) * .8 : 0, s: .6 + out3(r) * 2.6 }); });
+    words('#tag14').forEach((w, i) => S(w, W(t, 42.6 + i * .22)));
+    const u = P(t, 43.25, 43.75); S('#url14', { o: C(u * 3), y: (1 - back(u)) * 20, s: L(.9, 1, out3(u)) });
+  }
+}
+
+// the score's moments
+const CUES = {
+  whoosh: [6.05, 9.3, 12.0, 14.85, 17.45, 20.15, 24.35, 29.3, 32.15, 35.5, 38.3, 41.0],
+  pop: [1.6, 4.1, 7.45, 7.56, 7.67, 7.78, 7.89, 16.15, 16.65, 19.4, 21.5, 22.2, 22.53, 22.86, 23.19, 23.6, 25.4, 25.7, 26.0, 26.3, 25.9, 26.28, 26.66, 27.04, 34.4, 37.9, 38.0, 36.25, 42.6, 43.3],
+  tap: [27.6, 36.62, 37.3],
+  hit: [3.5, 17.65, 41.3],
+  chime: [1.6, 36.0],
+  shutter: [24.0],
+  success: [37.75],
+  scan: [21.6],
+  letters: [3.45, 3.54, 3.63, 3.72],
+  type: [],
+};
+// every typed key
+(() => {
+  const add = (from, n, cps) => { for (let i = 0; i < n; i++) CUES.type.push(+(from + i / cps).toFixed(3)); };
+  add(6.45, 29, 21); add(11.05, 7, 16); add(38.65, 7, 13); add(39.55, 7, 20); add(40.0, 8, 13);
+})();
+// the engine's score format: chapters, music, silence and risers as [start, end] pairs, letter landings as thuds
+const { letters, ...rest } = CUES;
+window.film = { W: 1440, H: 1080, LEN, seek, cues: () => ({ LEN, chapters: CH.slice(0, 4), music: { key: 'D', bpm: 120, groove: 17.65, end: 41.3, mood: 'bright' },
+  ...rest, thud: letters.map((s) => s + .25), silence: [[17.47, 17.65]], riser: [[2.3, 3.5], [16.25, 17.45], [40.2, 41.3]] }) };
+</script>
+</body></html>

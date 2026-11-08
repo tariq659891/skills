@@ -1,0 +1,8 @@
+{
+  "name": "marquee",
+  "version": "0.1.0",
+  "description": "Hand it a product, get its launch film: a 15–60 s product video with smooth motion and music, from an idea, a link or screenshots. Rendered from code in headless Chrome, no voiceover.",
+  "author": { "name": "Tariq" },
+  "license": "MIT",
+  "keywords": ["video", "product demo", "launch film", "motion design", "animation"]
+}

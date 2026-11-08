@@ -1,0 +1,192 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Tandem: a Marquee film</title>
+<link rel="stylesheet" href="../../engine/marquee.css">
+<style>
+  /* film-only looks */
+  .bub{padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.3;max-width:220px}
+  .bub.in{background:#e9edf3;color:#14202f}.bub.me{background:#1677ff;color:#fff;margin-left:auto}
+  .av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.12)}
+  .bal{position:absolute;left:24px;right:24px;height:64px;border-radius:14px;background:#f6f8fb;display:flex;align-items:center;gap:14px;padding:0 16px;font-size:15px}
+  .bar{height:10px;border-radius:5px;background:#1677ff}
+</style>
+</head><body data-fixture="marquee">
+<script src="../../engine/kit.js"></script>
+<script src="../../engine/blocks/frame.js"></script>
+<script src="../../engine/blocks/backgrounds.js"></script>
+<script src="../../engine/blocks/devices.js"></script>
+<script src="../../engine/blocks/pieces.js"></script>
+<script src="../../engine/blocks/collage.js"></script>
+<script src="../../engine/blocks/pointers.js"></script>
+<script src="../../engine/blocks/logo.js"></script>
+<script>
+/* TANDEM: split rent and bills with flatmates. 30 s, 16:9.
+ * Intro 0–4.5 · Problem 4.5–11 · Use case 11–25.5 · Call to action 25.5–31 */
+const { set, p, lerp, ease: E, blurIn, pop, rise, leave, float, words, type, cue } = M;
+M.film({ W: 1920, H: 1080, LEN: 31, chapters: [['Intro', 0], ['Problem', 4.5], ['Use Case', 11], ['Call to Action', 25.5]], music: { key: 'F', bpm: 118, groove: 11.05, end: 28.15, mood: 'bright' } });
+M.frame({ chapters: [['Intro', 0], ['Problem', 4.5], ['Use Case', 11], ['Call to Action', 25.5]], palette: 'ocean', dimAt: 30.2 });
+const { w: CW, h: CH } = M.CARD;
+const MARK = M.mark('split', 'url(#tg)').replace('<rect', '<defs><linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f9dff"/><stop offset="1" stop-color="#0b5fe0"/></linearGradient></defs><rect');
+const AV = (l, c) => `<div class="av" style="background:${c}">${l}</div>`;
+
+// one paper under every scene of words
+const paperEl = M.sceneEl('paper'); const paper = M.paper(paperEl);
+M.scene('paper', 4.3, 11.0, (t) => paper.tick(t), { fi: .4, fo: .1 });
+
+// ---------- S1 intro: the phone, the notification, the name ----------
+const s1 = M.sceneEl('s1'); const mesh1 = M.mesh(s1);
+const ph1 = M.phone(s1, { x: (CW - 350) / 2, y: 60 });
+M.screen(ph1.scr, M.lock({ date: 'Friday, 6 November', time: '9:41' }) + M.notif({ app: 'Tandem', icon: MARK, title: 'Sam paid you back $42.50', body: 'Groceries, split 3 ways. You’re all square.' }));
+const n1 = M.$('.m-notif', ph1.scr);
+const name1 = M.html(s1, `<div class="m-abs" style="left:0;right:0;top:${CH * .3}px;display:flex;justify-content:center;align-items:center;gap:30px"><div style="width:150px;height:150px">${MARK}</div><div class="nm" style="font-size:210px;font-weight:750;letter-spacing:-.055em;line-height:1;color:#0e1b2e">Tandem</div></div>`);
+const tag1 = M.html(s1, `<div class="m-line" style="top:${CH * .3 + 215}px;font-size:34px;font-weight:600;color:#0e1b2e">Shared costs, <span class="m-acc">settled.</span></div>`);
+M.scene('s1', 0, 4.75, (t) => {
+  mesh1.tick(t);
+  const up = E.out5(p(t, 0, 1.3)), dim = E.io(p(t, 2.2, 2.8));
+  set(ph1.el, { y: lerp(560, 0, up) + M.drift(t, 1, 1) * 4, rx: lerp(26, 4, up), ry: M.drift(t, .6, 2) * 4, s: lerp(.88, 1, up) * lerp(1, .9, dim), o: lerp(1, .15, dim), b: dim * 9 });
+  const n = p(t, 1.2, 1.75); set(n1, { o: M.clamp(n * 3), y: lerp(-40, 0, E.back(n)), s: lerp(.92, 1, E.out3(n)) });
+  M.letters(M.$('.nm', name1), t, 2.3);
+  set(name1.firstElementChild, pop(t, 2.85, .6, .2));
+  words(tag1, t, 3.3, { gap: .16 });
+}, { fi: 0, fo: .4 });
+cue('chime', 1.25); cue('hit', 2.3); cue('thud', 2.55, 2.64, 2.73, 2.82, 2.91, 3.0); cue('pop', 2.9); cue('riser', [1.4, 2.3]);
+
+// ---------- S2 problem: one question, typed ----------
+const s2 = M.sceneEl('s2');
+const q2 = M.html(s2, `<div class="m-line" style="top:${CH * .42}px;font-size:66px">Who paid for the <span class="m-acc">internet</span> again?</div>`);
+M.scene('s2', 4.5, 8.05, (t) => { type(q2, t, 4.85, 20); set(q2, leave(t, 7.6)); }, { fi: .2, fo: .15, blur: 0 });
+M.build(() => cue('type', M.typeCues(4.85, q2, 20)));
+
+// ---------- S3 problem: the clutter, in a ring ----------
+const s3 = M.sceneEl('s3');
+const tiles = [
+  `<div class="m-tile" style="width:220px;padding:12px;display:flex;flex-direction:column;gap:6px"><div class="bub in">i’ll pay you back friday</div><div class="bub me">which friday</div></div>`,
+  `<div class="m-tile" style="width:200px;padding:14px;display:flex;gap:10px;align-items:center"><div style="width:38px;height:46px;border-radius:6px;background:#1d7a45;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center">XLS</div><div><div style="font-weight:650">rent_split_FINAL_v3</div><div style="color:#7a8696;font-size:11px">edited by ??? · 3 wk ago</div></div></div>`,
+  `<div class="m-tile" style="width:210px;padding:12px;display:flex;gap:9px;align-items:center"><div style="width:30px;height:30px;border-radius:8px;background:#0e1b2e;flex:none"></div><div><div style="font-weight:650;font-size:12px">Bank · −$1,840.00</div><div style="color:#7a8696;font-size:11px">RENT NOV · Flat 4B</div></div></div>`,
+  `<div style="width:150px;height:130px;background:#ffe57a;border-radius:4px;padding:14px;font:22px/1.2 'Bradley Hand','Marker Felt',cursive;color:#5a4300;box-shadow:0 18px 30px rgba(0,0,0,.15)">Sam owes<br>$23??</div>`,
+  `<div class="m-tile" style="width:190px;padding:12px"><div style="font-weight:700">Request $14.20</div><div style="color:#7a8696;margin-top:3px">“toilet paper (again)”</div></div>`,
+  `<div class="m-tile" style="width:180px;padding:12px;display:flex;flex-direction:column;gap:6px"><div class="bub in">whose turn for the electricity</div></div>`,
+  `<div class="m-tile" style="width:170px;padding:12px;background:#fff5f5"><div style="font-size:10px;font-weight:700;letter-spacing:.08em;color:#c0392b">OVERDUE</div><div style="font-weight:650;margin-top:4px">Internet · $79.99</div></div>`,
+  `<div class="m-tile" style="width:200px;padding:12px;display:flex;flex-direction:column;gap:6px"><div class="bub me">did anyone pay the water</div><div class="bub in">👀</div></div>`,
+  `<div class="m-tile" style="width:160px;padding:12px;font:11px/1.5 Menlo,monospace;text-transform:uppercase">Fresh Mart<br>Groceries 96.00<br><b>Total $96.00</b></div>`,
+];
+const ring = M.ring(s3, tiles, { rx: CW * .36, ry: CH * .34, cy: CH * .46 });
+const l3 = M.html(s3, `<div class="m-line" style="top:${CH * .42}px;font-size:46px">Living together shouldn’t need <span class="m-acc">a spreadsheet.</span></div>`);
+M.scene('s3', 7.95, 10.9, (t) => { ring.update(t, 8.0, 10.35); words(l3, t, 8.4, { gap: .12, z: 10.35 }); }, { fi: .2, fo: .1, blur: 0 });
+cue('whoosh', 7.95, 10.35); cue('riser', [9.9, 10.85]); cue('silence', [10.85, 11.05]);
+
+// ---------- S4 the turn: "Meet Tandem." then through the mark ----------
+const s4 = M.sceneEl('s4', '<div class="m-fill" style="background:#fff"></div>'); const mesh4 = M.mesh(s4, undefined, 1);
+const l4 = M.html(s4, `<div class="m-line" style="top:${CH * .36}px;font-size:150px;font-weight:650;letter-spacing:-.04em">Meet Tandem.</div>`);
+const m4 = M.html(s4, `<div class="m-abs" style="left:${CW / 2 - 80}px;top:${CH / 2 - 80}px;width:160px;height:160px">${MARK}</div>`);
+M.scene('s4', 11.05, 13.25, (t) => {
+  mesh4.tick(t); mesh4.el.style.opacity = E.io(p(t, 11.9, 12.4));
+  const ws = M.wordsOf(l4); ws.forEach((w, i) => set(w, M.mix(blurIn(t, 11.08 + i * .12, 11.75, .5), { s: 1 })));
+  const mz = p(t, 11.85, 12.4), thru = E.io(p(t, 12.6, 13.25));
+  set(m4, { o: M.clamp(mz * 3) * (1 - thru), s: lerp(.2, 1, E.back(mz)) * lerp(1, 5, thru), r: lerp(-25, 0, E.out3(mz)), b: thru * 6 });
+}, { fi: 0, fo: .3, blur: 6 });
+cue('hit', 11.05); cue('pop', 11.9); cue('whoosh', 12.75);
+
+// ---------- S5 use case: add an expense on the phone ----------
+const s5 = M.sceneEl('s5'); const mesh5 = M.mesh(s5, undefined, 2);
+const ph5 = M.phone(s5, { x: (CW - 350) / 2, y: 40 });
+const home = M.screen(ph5.scr, `${M.statusBar()}
+  <div class="m-abs" style="left:20px;top:62px;font-size:15px;color:#7a8696;font-weight:600">Flat 4B · 3 people</div>
+  <div class="m-abs" style="left:20px;top:88px;font-size:30px;font-weight:750;letter-spacing:-.025em">Add expense</div>
+  <div class="m-abs amt" style="left:0;right:0;top:150px;text-align:center;font-size:64px;font-weight:750;letter-spacing:-.03em;color:#0e1b2e">$96.00</div>
+  <div class="m-abs" style="left:0;right:0;top:232px;text-align:center" id="cat5">${M.chip('🛒 Groceries · Fresh Mart', 'blue')}</div>
+  <div class="m-abs" style="left:20px;top:286px;font-size:13px;color:#7a8696;font-weight:600">SPLIT BETWEEN</div>
+  <div class="m-abs" style="left:20px;top:310px;display:flex;gap:10px" id="avs5">${AV('Me', '#1677ff')}${AV('S', '#f39c12')}${AV('P', '#16a35a')}</div>
+  <div class="m-abs" style="left:190px;top:322px;font-size:15px;font-weight:650;color:#0e1b2e" id="each5">$32.00 each</div>
+  ${M.row({ icon: 'receipt', tone: 'grey', label: 'Receipt', value: 'Attached', chip: '✓', chipTone: 'green', top: 380 })}
+  ${M.button('Split it', 470)}`, '#fff');
+const done5 = M.screen(ph5.scr, `${M.statusBar()}
+  <div class="m-abs" style="left:0;right:0;top:120px;display:flex;justify-content:center"><div id="ok5" style="width:96px;height:96px;border-radius:50%;background:#16a35a;color:#fff;display:flex;align-items:center;justify-content:center"><span class="m-i" style="width:52px;height:52px">${M.ICONS.check ? `<svg viewBox="0 0 24 24" style="stroke-width:2.6">${M.ICONS.check}</svg>` : ''}</span></div></div>
+  <div class="m-abs" style="left:0;right:0;top:240px;text-align:center;font-size:26px;font-weight:750">You’re owed $64.00</div>
+  <div class="m-abs" style="left:0;right:0;top:278px;text-align:center;font-size:14px;color:#7a8696">Sam and Priya just got a nudge</div>
+  ${M.row({ icon: 'user', tone: 'accent', label: 'Sam', value: 'owes you $32.00', chip: 'Nudged', chipTone: 'blue', top: 330 })}
+  ${M.row({ icon: 'user', tone: 'green', label: 'Priya', value: 'paid $32.00', chip: 'Paid', chipTone: 'green', top: 402 })}`, '#fff');
+const f5 = [
+  M.card(s5, { x: 150, y: 140, icon: 'split', tone: 'accent', title: 'Split 3 ways', sub: 'Exactly $32.00 each' }),
+  M.card(s5, { x: CW - 470, y: 170, icon: 'bell', tone: 'blue', title: 'Everyone’s nudged', sub: 'No awkward texts' }),
+  M.card(s5, { x: 190, y: 460, icon: 'receipt', tone: 'grey', title: 'Receipt kept', sub: 'Snap it once' }),
+  M.card(s5, { x: CW - 450, y: 480, icon: 'check', tone: 'green', title: 'Priya paid', sub: 'Two minutes later' }),
+];
+const finger5 = M.finger(s5);
+const taps5 = [[14.5, ph5.ox + 164, ph5.oy + 498]];
+M.scene('s5', 13.05, 19.6, (t) => {
+  mesh5.tick(t);
+  const up = E.out5(p(t, 13.05, 13.7)), q = E.io(p(t, 19.15, 19.6));
+  set(ph5.el, { s: lerp(1.25, 1, up) * lerp(1, .93, q), b: (1 - up) * 10 + q * 8, y: q * 40, ry: M.drift(t, .7, 3) * 4, rx: M.drift(t, .5, 4) * 1.5 });
+  set(M.$('.amt', home), blurIn(t, 13.4, 1e9, .5));
+  set(M.$('#cat5', home), pop(t, 13.65));
+  M.$$('#avs5 .av', home).forEach((a, i) => set(a, pop(t, 13.8 + i * .1)));
+  set(M.$('#each5', home), blurIn(t, 14.05));
+  set(M.$('.m-row', home), blurIn(t, 14.15, 1e9, .45));
+  const btn = M.$('.m-btn', home); set(btn, { s: t > 14.45 && t < 14.6 ? .96 : 1 });
+  const sw = E.out5(p(t, 14.75, 15.3));
+  set(done5, { o: M.clamp(p(t, 14.75, 14.95) * 3), y: lerp(300, 0, sw) });
+  set(M.$('#ok5', done5), pop(t, 15.0, .55, .3));
+  M.$$('.m-row', done5).forEach((r, i) => set(r, M.mix(blurIn(t, 15.4 + i * .3, 1e9, .45))));
+  M.cards(f5, t, 15.5, { gap: .4, z: 19.1 });
+  finger5.update(t, taps5);
+}, { fi: .2, fo: .3 });
+cue('pop', 13.65, 13.8, 13.9, 14.0, 15.0, 15.5, 15.9, 16.3, 16.7); cue('tap', 14.5); cue('success', 15.0);
+
+// ---------- S6 use case: the whole flat, on the web ----------
+const s6 = M.sceneEl('s6'); M.studio(s6, { wall: '#eef2f7', table: '#dde4ec' });
+const room = M.html(s6, '<div class="m-fill" style="transform-origin:50% 45%"></div>');
+const br = M.browser(room, { x: (CW - 1060) / 2, y: 70, w: 1060, h: 600, url: 'tandem.app/flat-4b' });
+br.scr.innerHTML = `
+  <div class="m-abs" style="left:0;top:0;bottom:0;width:200px;background:#f4f6f9;padding:22px 16px">
+    <div style="display:flex;gap:9px;align-items:center;font-weight:750;font-size:19px;letter-spacing:-.02em"><div style="width:28px;height:28px">${MARK}</div>Tandem</div>
+    ${['Flat 4B', 'Expenses', 'Bills', 'Settle up', 'History'].map((n, i) => `<div style="margin-top:${i ? 4 : 22}px;padding:9px 12px;border-radius:9px;font-size:14px;${i === 0 ? 'background:#fff;font-weight:650;box-shadow:0 1px 3px rgba(0,0,0,.06)' : 'color:#5b6676'}">${n}</div>`).join('')}
+  </div>
+  <div class="m-abs" style="left:228px;top:24px;font-size:24px;font-weight:750;letter-spacing:-.02em">November in Flat 4B</div>
+  <div class="m-abs" style="left:228px;top:58px;font-size:13px;color:#7a8696">Rent, bills and the shared shop, split as you go</div>
+  <div class="m-abs" style="right:26px;top:20px;width:220px;height:70px;border-radius:14px;background:#0e1b2e;color:#fff;padding:12px 16px"><div style="font-size:11px;opacity:.7">Split this month</div><div id="cnt6" style="font-size:27px;font-weight:750;letter-spacing:-.02em">$0</div></div>
+  <div class="bal" style="top:120px;left:228px"><div style="display:flex">${AV('S', '#f39c12')}</div><div style="width:120px"><b>Sam</b><div style="font-size:12px;color:#7a8696">owes you</div></div><div class="bar b6" style="width:240px;background:#f39c12"></div><b style="margin-left:auto">$32.00</b></div>
+  <div class="bal" style="top:196px;left:228px"><div>${AV('P', '#16a35a')}</div><div style="width:120px"><b>Priya</b><div style="font-size:12px;color:#7a8696">all square</div></div><div class="bar b6" style="width:40px;background:#16a35a"></div><b style="margin-left:auto">$0.00</b></div>
+  <div class="bal" style="top:272px;left:228px"><div>${AV('Y', '#1677ff')}</div><div style="width:120px"><b>You</b><div style="font-size:12px;color:#7a8696">are owed</div></div><div class="bar b6" style="width:300px"></div><b style="margin-left:auto">$32.00</b></div>
+  <div class="m-abs" style="left:228px;top:370px;display:flex;gap:10px">${['Rent $1,840', 'Internet $79.99', 'Power $112.40', 'Groceries $96.00'].map((x) => `<span class="ch6">${M.chip(x, 'grey')}</span>`).join('')}</div>
+  <div class="m-abs settle" style="left:228px;top:430px;width:220px;height:52px;border-radius:14px;background:#1677ff;color:#fff;font-weight:650;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 22px rgba(22,119,255,.3)">Settle up</div>
+  <div class="m-abs toast6" style="right:22px;bottom:22px;background:#0e1b2e;color:#fff;border-radius:13px;padding:13px 16px;font-size:14px;display:flex;gap:10px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,.25)"><span style="width:22px;height:22px;border-radius:50%;background:#16a35a;display:flex;align-items:center;justify-content:center;font-size:13px">✓</span>Everyone’s square for November</div>`;
+const cur6 = M.cursor(room);
+M.scene('s6', 19.45, 25.65, (t) => {
+  const push = E.io(p(t, 19.45, 25.65)), thru = E.io(p(t, 25.25, 25.65));
+  room.style.transform = `scale(${lerp(.9, 1.03, push) * lerp(1, 1.4, thru)})`; room.style.filter = thru > .01 ? `blur(${thru * 8}px)` : 'none';
+  set(br.el, rise(t, 19.5, .9, 80));
+  M.count(M.$('#cnt6', br.scr), t, 20.2, 21.8, 2128.39, { prefix: '$', decimals: 2 });
+  M.$$('.bal', br.scr).forEach((b, i) => set(b, blurIn(t, 20.3 + i * .18, 1e9, .5)));
+  M.$$('.b6', br.scr).forEach((b, i) => { b.style.transformOrigin = '0 50%'; set(b, { sx: E.out5(p(t, 20.6 + i * .18, 21.6 + i * .18)), sy: 1 }); });
+  M.$$('.ch6', br.scr).forEach((c, i) => set(c, pop(t, 21.0 + i * .1)));
+  const bx = br.ox + 228 + 110, by = br.oy + 430 + 26;
+  cur6.update(t, [[21.9, br.ox + 900, br.oy + 520], [22.9, bx, by]], { clicks: [23.1], show: [21.8, 25.2] });
+  set(M.$('.settle', br.scr), { s: t > 23.05 && t < 23.2 ? .95 : 1 });
+  M.$$('.bal b:last-child', br.scr).forEach((b) => (b.textContent = t > 23.4 ? '$0.00' : b.dataset.v || (b.dataset.v = b.textContent)));
+  M.$$('.b6', br.scr).forEach((b, i) => { if (t > 23.3) set(b, { sx: lerp(1, .12, E.out5(p(t, 23.3 + i * .08, 24.1 + i * .08))), sy: 1 }); });
+  const tk = p(t, 23.5, 23.95); set(M.$('.toast6', br.scr), { o: M.clamp(tk * 3), x: (1 - E.out5(tk)) * 60 });
+}, { fi: .35, fo: .2 });
+cue('whoosh', 19.4); cue('pop', 21.0, 21.1, 21.2, 21.3, 23.5); cue('tap', 23.1); cue('success', 23.4); cue('whoosh', 25.3);
+
+// ---------- S7 call to action: typed ----------
+const s7 = M.sceneEl('s7'); const paper7 = M.paper(s7);
+const a7 = M.html(s7, `<div class="m-line" style="top:${CH * .42}px;font-size:72px">Split it.</div>`);
+const b7 = M.html(s7, `<div class="m-line m-acc" style="top:${CH * .42}px;font-size:72px">Forget it.</div>`);
+M.scene('s7', 25.5, 28.25, (t) => {
+  paper7.tick(t);
+  const na = 9, shown = t < 26.6 ? M.clamp((t - 25.65) * 16, 0, na) : M.clamp(na - (t - 26.6) * 24, 0, na);
+  a7.style.display = t < 26.98 ? 'block' : 'none'; M.typeTo(a7, shown, shown < na || t > 26.6 || M.blink(t));
+  b7.style.display = t >= 26.98 ? 'block' : 'none'; if (t >= 26.98) M.type(b7, t, 27.0, 16);
+  set(b7, M.mix(leave(t, 27.9, .35), { s: lerp(1, 1.05, E.io(p(t, 27.4, 28.25))) }));
+}, { fi: .25, fo: .2 });
+M.build(() => cue('type', M.typeCues(25.65, a7, 16), M.typeCues(26.6, a7, 24), M.typeCues(27.0, b7, 16)));
+cue('riser', [27.1, 28.15]);
+
+// ---------- S8 the end: name over the sky ----------
+const s8 = M.sceneEl('s8'); const sky = M.sky(s8);
+const whiteMark = `<svg viewBox="0 0 64 64" style="width:100%;height:100%"><rect x="4" y="4" width="56" height="56" rx="16" fill="#fff"/><g transform="translate(14 14) scale(1.5)" fill="none" stroke="#1677ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${M.ICONS.split}</g></svg>`;
+const logo = M.logo(s8, { mark: whiteMark, name: 'Tandem', line: 'Shared costs, settled.', url: 'tandem.app · free for your flat', size: 150, top: CH * .3 });
+M.scene('s8', 28.0, 31.01, (t) => { sky.tick(t, 28.0); logo.update(t, 28.15); }, { fi: .4, fo: 0 });
+cue('whoosh', 27.95); cue('hit', 28.2); cue('pop', 30.15);
+</script>
+</body></html>

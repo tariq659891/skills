@@ -1,0 +1,13 @@
+{
+  "name": "tariq",
+  "owner": { "name": "Tariq" },
+  "metadata": { "description": "Skills for Claude Code, each solving one real job end to end." },
+  "plugins": [
+    {
+      "name": "marquee",
+      "source": "./marquee",
+      "description": "Hand it a product, get its launch film: a 15–60 s product video with smooth motion and music, from an idea, a link or screenshots.",
+      "version": "0.1.0"
+    }
+  ]
+}

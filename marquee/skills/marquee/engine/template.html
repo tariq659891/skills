@@ -1,0 +1,118 @@
+<!doctype html>
+<!-- A Marquee film. Copy this file and the engine/ folder into the film's own folder, then fill every FILL.
+     It renders as it stands (a placeholder startup), so you can check the setup first:
+       node engine/render.mjs film.html --sheet -->
+<html><head><meta charset="utf-8"><title>FILL name: a Marquee film</title>
+<link rel="stylesheet" href="engine/marquee.css">
+<style>/* film-only looks go here */</style>
+</head><body>
+<script src="engine/kit.js"></script>
+<script src="engine/blocks/frame.js"></script>
+<script src="engine/blocks/backgrounds.js"></script>
+<script src="engine/blocks/devices.js"></script>
+<script src="engine/blocks/pieces.js"></script>
+<script src="engine/blocks/collage.js"></script>
+<script src="engine/blocks/pointers.js"></script>
+<script src="engine/blocks/logo.js"></script>
+<script>
+const { set, p, lerp, ease: E, blurIn, pop, rise, leave, float, words, type, cue } = M;
+
+// ---------- FILL: the brief ----------
+const NAME = 'Lumen';                                   // FILL the product's name
+const PROMISE = 'Your inbox, <span class="m-acc">sorted.</span>'; // FILL one line, accent on one word
+const URL = 'lumen.app · free to start';                // FILL where to get it
+const SYMBOL = 'mail';                                  // FILL an icon name for the mark (see M.ICONS), or use a logo <img>
+const CH = [['Intro', 0], ['Problem', 6.2], ['Use Case', 17.5], ['Call to Action', 38.5]]; // story.md has 15/30/45/60 s tables
+
+M.film({ W: 1440, H: 1080, LEN: 45, chapters: CH, music: { key: 'D', bpm: 120, groove: 17.65, end: 41.3, mood: 'bright' } });
+M.frame({ chapters: CH, palette: 'tangerine', dimAt: 44.1 });   // FILL palette: a preset or M.paletteFrom('#hex')
+const { w: CW, h: CH_ } = M.CARD;
+const MARK = M.mark(SYMBOL);
+// a phone that fits the frame: 350 px in wide frames, about half the width (and centred) in tall ones
+const TALL = CH_ > CW, PW = TALL ? Math.round(CW * .56) : 350, PH = PW * 2.086, PY = TALL ? Math.round((CH_ - PH) / 2) : 70;
+
+// ---------- paper under every scene of words ----------
+const paperEl = M.sceneEl('paper'); const paper = M.paper(paperEl);
+M.scene('paper', 6.0, 17.6, (t) => paper.tick(t), { fi: .45, fo: .2 });
+
+// ---------- Intro: the product in the first second, then the name ----------
+const s1 = M.sceneEl('s1'); const mesh1 = M.mesh(s1);
+const ph1 = M.phone(s1, { x: (CW - PW) / 2, y: PY, w: PW });
+M.screen(ph1.scr, M.lock({}) + M.notif({ app: NAME, icon: MARK, title: 'FILL the notification that is the product', body: 'FILL one line of detail.' }));
+const n1 = M.$('.m-notif', ph1.scr);
+const name1 = M.html(s1, `<div class="m-abs" style="left:0;right:0;top:${CH_ * .3}px;display:flex;justify-content:center;align-items:center;gap:26px"><div class="mk" style="width:160px;height:160px">${MARK}</div><div class="nm" style="font-size:220px;font-weight:750;letter-spacing:-.055em;line-height:1">${NAME}</div></div>`);
+const tag1 = M.html(s1, `<div class="m-line" style="top:${CH_ * .3 + 230}px;font-size:32px;font-weight:600">${PROMISE}</div>`);
+M.scene('s1', 0, 6.45, (t) => {
+  mesh1.tick(t);
+  const up = E.out5(p(t, 0, 1.4)), dim = E.io(p(t, 3.3, 4.0));
+  set(ph1.el, { y: lerp(560, 0, up) + M.drift(t, 1, 1) * 4, rx: lerp(28, 4, up), ry: M.drift(t, .6, 2) * 4, s: lerp(.88, 1, up) * lerp(1, .9, dim), o: lerp(1, .18, dim), b: dim * 9 });
+  const n = p(t, 1.55, 2.15); set(n1, { o: M.clamp(n * 3), y: lerp(-40, 0, E.back(n)), s: lerp(.92, 1, E.out3(n)) });
+  M.letters(M.$('.nm', name1), t, 3.45);
+  set(M.$('.mk', name1), pop(t, 4.05, .6, .3));
+  words(tag1, t, 4.75, { gap: .12 });
+}, { fi: 0, fo: .45 });
+cue('chime', 1.6); cue('hit', 3.5); cue('riser', [2.3, 3.5]); cue('pop', 4.1);
+
+// ---------- Problem: the feeling, typed ----------
+const s3 = M.sceneEl('s3');
+const l3 = M.html(s3, `<div class="m-line" style="top:${CH_ * .43}px;font-size:56px"><span class="m-acc">FILL Every day, </span>FILL the feeling.</div>`);
+M.scene('s3', 6.2, 10.4, (t) => { type(l3, t, 6.5, 21); set(l3, leave(t, 9.9)); }, { fi: .2, fo: .2, blur: 0 });
+M.build(() => cue('type', M.typeCues(6.5, l3, 21)));
+
+// ---------- Problem: the clutter, in a ring ----------
+const s5 = M.sceneEl('s5');
+const ring = M.ring(s5, ['FILL a chat', 'FILL a file', 'FILL a note', 'FILL an email', 'FILL a tab', 'FILL a reminder', 'FILL a bill', 'FILL a screenshot']
+  .map((x) => `<div class="m-tile" style="position:relative;padding:14px 16px;font-weight:600;white-space:nowrap">${x}</div>`));
+const l5 = M.html(s5, `<div class="m-line" style="top:${CH_ * .44}px;font-size:46px">FILL it’s <span class="m-acc">everywhere.</span></div>`);
+M.scene('s5', 10.3, 17.5, (t) => { ring.update(t, 10.4, 16.9); words(l5, t, 10.9, { z: 16.9 }); }, { fi: .2, fo: .15, blur: 0 });
+cue('whoosh', 10.3, 16.9); cue('riser', [16.25, 17.45]); cue('silence', [17.47, 17.65]);
+
+// ---------- Use case: the turn, then the product doing the job ----------
+// FILL: one phone scene is a placeholder. A real film follows one job across 2–3 scenes (a phone, then a desktop or
+// a reminder), each 4–7 s. See examples/kept and examples/tandem, and guide/scenes.md for the patterns.
+const s7 = M.sceneEl('s7', '<div class="m-fill" style="background:#fff"></div>'); const mesh7 = M.mesh(s7, undefined, 1);
+const l7 = M.html(s7, `<div class="m-line" style="top:${CH_ * .36}px;font-size:180px;font-weight:650;letter-spacing:-.04em">Simple.</div>`);
+const m7 = M.html(s7, `<div class="m-abs" style="left:${CW / 2 - 80}px;top:${CH_ / 2 - 80}px;width:160px;height:160px">${MARK}</div>`);
+M.scene('s7', 17.55, 20.4, (t) => {
+  mesh7.tick(t); mesh7.el.style.opacity = E.io(p(t, 19.3, 19.9));
+  M.wordsOf(l7).forEach((w) => set(w, blurIn(t, 17.65, 19.2, .6)));
+  const mz = p(t, 19.35, 19.95), thru = E.io(p(t, 19.95, 20.4));
+  set(m7, { o: M.clamp(mz * 3) * (1 - thru), s: lerp(.2, 1, E.back(mz)) * lerp(1, 5, thru), b: thru * 6 });
+}, { fi: .1, fo: .3, blur: 6 });
+cue('hit', 17.65); cue('pop', 19.4);
+
+const s8 = M.sceneEl('s8'); const mesh8 = M.mesh(s8, undefined, 2);
+const ph8 = M.phone(s8, { x: (CW - PW) / 2, y: TALL ? PY : 40, w: PW });
+const scr8 = M.screen(ph8.scr, `${M.statusBar()}
+  <div class="m-abs" style="left:20px;top:88px;font-size:28px;font-weight:750;letter-spacing:-.025em">FILL screen title</div>
+  ${M.row({ icon: 'check', tone: 'accent', label: 'FILL', value: 'FILL the first result', chip: 'FILL', top: 150 })}
+  ${M.row({ icon: 'clock', tone: 'green', label: 'FILL', value: 'FILL the second', chip: 'FILL', top: 222 })}
+  ${M.row({ icon: 'bell', tone: 'blue', label: 'FILL', value: 'FILL the third', chip: 'FILL', top: 294 })}
+  ${M.button('FILL the action', 400)}`);
+const cards8 = [
+  M.card(s8, { x: TALL ? 40 : 110, y: TALL ? PY + PH * .2 : 130, icon: 'check', tone: 'accent', title: 'FILL a fact', sub: 'FILL the detail' }),
+  M.card(s8, { x: TALL ? CW - 380 : CW - 420, y: TALL ? PY + PH * .62 : 160, icon: 'clock', tone: 'green', title: 'FILL a fact', sub: 'FILL the detail' }),
+];
+const f8 = M.finger(s8);
+M.scene('s8', 20.2, 38.6, (t) => {
+  mesh8.tick(t);
+  const up = E.out5(p(t, 20.2, 21.0)), q = E.io(p(t, 38.1, 38.6));
+  set(ph8.el, { s: lerp(1.2, 1, up) * lerp(1, .93, q), b: (1 - up) * 10 + q * 8, ry: M.drift(t, .7, 3) * 4 });
+  M.$$('.m-row', scr8).forEach((r, i) => set(r, blurIn(t, 21.2 + i * .3, 1e9, .45)));
+  M.cards(cards8, t, 22.4, { z: 38.0 });
+  f8.update(t, [[24.0, ph8.ox + 164 * ph8.k, ph8.oy + 428 * ph8.k]]);
+}, { fi: .3, fo: .4 });
+cue('pop', 21.2, 21.5, 21.8, 22.4, 22.8); cue('tap', 24.0);
+
+// ---------- Call to action: typed, then the name ----------
+const s13 = M.sceneEl('s13'); const paper13 = M.paper(s13);
+const l13 = M.html(s13, `<div class="m-line m-acc" style="top:${CH_ * .43}px;font-size:64px">FILL Try it.</div>`);
+M.scene('s13', 38.4, 41.35, (t) => { paper13.tick(t); type(l13, t, 38.7, 13); set(l13, leave(t, 40.9)); }, { fi: .3, fo: .4 });
+M.build(() => cue('type', M.typeCues(38.7, l13, 13)));
+const s14 = M.sceneEl('s14'); const sky = M.sky(s14);
+const white = `<svg viewBox="0 0 64 64" style="width:100%;height:100%"><rect x="4" y="4" width="56" height="56" rx="16" fill="#fff"/><g transform="translate(14 14) scale(1.5)" fill="none" stroke="var(--accent)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${M.ICONS[SYMBOL]}</g></svg>`;
+const logo = M.logo(s14, { mark: white, name: NAME, line: PROMISE.replace(/<[^>]+>/g, ''), url: URL, top: CH_ * .3 });
+M.scene('s14', 41.0, 45.01, (t) => { sky.tick(t, 41); logo.update(t, 41.3); }, { fi: .4, fo: 0 });
+cue('whoosh', 41.0); cue('hit', 41.3); cue('pop', 43.3); cue('riser', [40.2, 41.3]);
+</script>
+</body></html>
